@@ -23,3 +23,14 @@ VITE_API_URL=http://api-host:8080 docker compose up -d --build  # :5173
 
 Backend + engine: [RakhaYandra/pulse](https://github.com/RakhaYandra/pulse).
 E2E (Playwright, lives in api repo `qa/e2e`): `BASE_URL=http://localhost:5173 npx playwright test`.
+
+## Architecture
+
+Full Clean Architecture ([ADR-001](docs/ADR-001-fe-ca.md)): `domain/` (entities +
+pure stats, zero React/fetch) → `application/` (ports + use-cases, fake-tested)
+→ `infrastructure/` (httpClient, apiGateway, tokenStore) → `presentation/`
+(pure components + hooks). `App.jsx` wires everything (composition root).
+
+```bash
+npx vitest run   # 15 unit tests (domain + use-cases)
+```
