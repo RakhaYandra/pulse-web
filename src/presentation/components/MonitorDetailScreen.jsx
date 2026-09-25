@@ -38,8 +38,8 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
           {checks.map((c, i) => {
             const d = checkDisplay(c)
             return (
-              <tr key={i}>
-                <td>{new Date(c.checkedAt).toLocaleTimeString()}</td>
+              <tr key={`${c.checkedAt}-${i}`}>
+                <td>{new Date(c.checkedAt).toLocaleDateString(undefined, { month: 'numeric', day: 'numeric' })} {new Date(c.checkedAt).toLocaleTimeString()}</td>
                 <td>{d.mark} {c.status}</td>
                 <td>{d.code}</td>
                 <td className="mono">{d.response}</td>

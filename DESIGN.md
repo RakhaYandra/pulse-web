@@ -8,6 +8,13 @@ pertanyaan: monitor mana yang butuh perhatian sekarang.
 
 ## Dial: ENERGY 1 / RHYTHM 2 / MOTION 2
 
+## Sistem yang mengikat
+
+- Radius: hanya `--radius-s/m/l` (8/10/12). s = kontrol kecil,
+  m = baris/kartu stat, l = kartu/form. Tanpa nilai mentah.
+- Warna: hanya via token. Nol hex di JS/JSX (cek: `grep # src/`).
+- Key list stabil (bukan index murni); sel waktu memuat tanggal.
+
 ## Palette (alasan per R-31)
 
 - Base dark slate `#0f172a`, surface `#1e293b`: konsol ops memang gelap
