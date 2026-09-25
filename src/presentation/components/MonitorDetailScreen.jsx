@@ -5,9 +5,19 @@ import { Spark } from './Spark.jsx'
 import { DetailStats } from './Stats.jsx'
 
 export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
-  const { monitor: m, checks, incidents, reload } = useMonitorDetail(monitorUC, id)
+  const { monitor: m, checks, incidents, loading, loadError, reload } = useMonitorDetail(monitorUC, id)
 
-  if (!m) return <div className="wrap"><button onClick={onBack}>← back</button></div>
+  if (loading) return <div className="wrap"><p className="muted">Loading monitor…</p></div>
+  if (loadError) {
+    return (
+      <div className="wrap">
+        <p className="error">{loadError}</p>
+        <button onClick={reload}>Retry</button> <button onClick={onBack}>← back</button>
+      </div>
+    )
+  }
+
+  if (!m) return <div className="wrap"><p className="muted">Monitor not found. It may have been deleted.</p><button onClick={onBack}>← back</button></div>
 
   const uptime = uptimePct(checks)
   const avg = avgResponseMs(checks)
@@ -17,10 +27,11 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
       <button onClick={() => { onBack(); onChanged?.() }}>← back</button>
       <h2>{m.name} <Dot status={m.status} /></h2>
       <div className="muted">{m.url} · every {m.intervalSeconds}s · timeout {m.timeoutSeconds}s</div>
-      <DetailStats uptime={uptime == null ? '—' : uptime.toFixed(2)} avg={avg == null ? '—' : avg} status={m.status} />
+      <DetailStats uptime={uptime == null ? 'n/a' : uptime.toFixed(2)} avg={avg == null ? 'n/a' : avg} status={m.status} />
       <h3>Response time</h3>
       <Spark checks={checks} />
       <h3>Recent checks</h3>
+      <div className="table-scroll">
       <table>
         <thead><tr><th>Time</th><th>Status</th><th>Code</th><th>Response</th></tr></thead>
         <tbody>
@@ -37,11 +48,12 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
           })}
         </tbody>
       </table>
+      </div>
       <h3>Incidents</h3>
       {incidents.length === 0 && <div className="muted">none</div>}
       {incidents.map((in_) => (
         <div key={in_.id} className="card">
-          <b>{in_.status}</b> — {in_.reason}<br />
+          <b>{in_.status}</b>: {in_.reason}<br />
           <span className="muted">{new Date(in_.startedAt).toLocaleString()}
             {in_.resolvedAt ? ' → ' + new Date(in_.resolvedAt).toLocaleString() : ' (ongoing)'}</span>
         </div>

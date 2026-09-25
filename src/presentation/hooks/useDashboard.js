@@ -6,15 +6,26 @@ export function useDashboard(monitorUC) {
   const [monitors, setMonitors] = useState([])
   const [incidents, setIncidents] = useState([])
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
 
   async function reload() {
-    const d = await monitorUC.loadDashboard()
-    setSummary(d.summary)
-    setMonitors(d.monitors)
-    setIncidents(d.incidents)
+    try {
+      const d = await monitorUC.loadDashboard()
+      setSummary(d.summary)
+      setMonitors(d.monitors)
+      setIncidents(d.incidents)
+      setLoadError('')
+    } catch (ex) {
+      if (summary === null) setLoadError(ex.message || 'Failed to load dashboard.')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  usePolling(reload, 15000, [])
+  usePolling(reload, 15000, [], (ex) => {
+    if (summary === null) setLoadError(ex.message || 'Failed to load dashboard.')
+  })
 
   async function create(raw) {
     setError('')
@@ -38,5 +49,5 @@ export function useDashboard(monitorUC) {
     await reload()
   }
 
-  return { summary, monitors, incidents, error, reload, create, toggle, remove }
+  return { summary, monitors, incidents, error, loading, loadError, reload, create, toggle, remove }
 }

@@ -45,6 +45,6 @@ describe('stats', () => {
   })
   it('checkDisplay', () => {
     expect(checkDisplay({ status: 'UP', responseTimeMs: 50 })).toMatchObject({ mark: '✓', response: '50 ms' })
-    expect(checkDisplay({ status: 'ERROR', error: 'boom' })).toMatchObject({ mark: '✗', code: '—', response: 'boom' })
+    expect(checkDisplay({ status: 'ERROR', error: 'boom' })).toMatchObject({ mark: '✗', code: 'n/a', response: 'boom' })
   })
 })

@@ -6,8 +6,18 @@ import { MonitorList, IncidentList } from './Lists.jsx'
 import { MonitorForm } from './MonitorForm.jsx'
 
 export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
-  const { summary, monitors, incidents, create, toggle, remove } = useDashboard(monitorUC)
+  const { summary, monitors, incidents, loading, loadError, reload, create, toggle, remove } = useDashboard(monitorUC)
   const [tab, setTab] = useState('monitors')
+
+  if (loading) return <div className="wrap"><p className="muted">Loading monitors…</p></div>
+  if (loadError) {
+    return (
+      <div className="wrap">
+        <p className="error">{loadError}</p>
+        <button onClick={reload}>Retry</button>
+      </div>
+    )
+  }
 
   return (
     <div className="wrap">

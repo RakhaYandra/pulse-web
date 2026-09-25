@@ -34,7 +34,7 @@ export function sparkPoints(checks = [], width = 300, height = 60) {
 export function checkDisplay(check) {
   return {
     mark: check.status === 'UP' ? '✓' : '✗',
-    code: check.statusCode ?? '—',
-    response: check.responseTimeMs != null ? `${check.responseTimeMs} ms` : check.error || '—',
+    code: check.statusCode ?? 'n/a',
+    response: check.responseTimeMs != null ? `${check.responseTimeMs} ms` : check.error || 'n/a',
   }
 }
