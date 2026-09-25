@@ -22,7 +22,7 @@ VITE_API_URL=http://api-host:8080 docker compose up -d --build  # :5173
 ```
 
 Backend + engine: [RakhaYandra/pulse](https://github.com/RakhaYandra/pulse).
-E2E (Playwright, lives in api repo `qa/e2e`): `BASE_URL=http://localhost:5173 npx playwright test`.
+E2E (Playwright, `./e2e`, needs API + web running): `BASE_URL=http://localhost:5173 npm test --prefix e2e`.
 
 ## Architecture
 
