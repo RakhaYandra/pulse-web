@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 export function LoginForm({ onLogin, onRegister, error }) {
   const [mode, setMode] = useState('login')
-  const [email, setEmail] = useState('demo@pulse.local')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
 
