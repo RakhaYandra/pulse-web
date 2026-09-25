@@ -1,5 +1,5 @@
 import { useMonitorDetail } from '../hooks/useMonitorDetail.js'
-import { uptimePct, avgResponseMs, checkDisplay } from '../../domain/stats.js'
+import { uptimePct, avgResponseMs, checkDisplay, incidentDuration } from '../../domain/stats.js'
 import { Dot } from './Dot.jsx'
 import { Spark } from './Spark.jsx'
 import { DetailStats } from './Stats.jsx'
@@ -28,7 +28,7 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
       <h2>{m.name} <Dot status={m.status} /></h2>
       <div className="muted">{m.url} · every {m.intervalSeconds}s · timeout {m.timeoutSeconds}s</div>
       <DetailStats uptime={uptime == null ? 'n/a' : uptime.toFixed(2)} avg={avg == null ? 'n/a' : avg} status={m.status} />
-      <h3>Response time</h3>
+      <h3>Response time, last 20 checks</h3>
       <Spark checks={checks} />
       <h3>Recent checks</h3>
       <div className="table-scroll">
@@ -42,7 +42,7 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
                 <td>{new Date(c.checkedAt).toLocaleTimeString()}</td>
                 <td>{d.mark} {c.status}</td>
                 <td>{d.code}</td>
-                <td>{d.response}</td>
+                <td className="mono">{d.response}</td>
               </tr>
             )
           })}
@@ -53,7 +53,7 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
       {incidents.length === 0 && <div className="muted">none</div>}
       {incidents.map((in_) => (
         <div key={in_.id} className="card">
-          <b>{in_.status}</b>: {in_.reason}<br />
+          <b>{in_.status}</b>: {in_.reason} · <span className="mono">{incidentDuration(in_.startedAt, in_.resolvedAt)}</span><br />
           <span className="muted">{new Date(in_.startedAt).toLocaleString()}
             {in_.resolvedAt ? ' → ' + new Date(in_.resolvedAt).toLocaleString() : ' (ongoing)'}</span>
         </div>

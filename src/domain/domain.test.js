@@ -48,3 +48,25 @@ describe('stats', () => {
     expect(checkDisplay({ status: 'ERROR', error: 'boom' })).toMatchObject({ mark: '✗', code: 'n/a', response: 'boom' })
   })
 })
+
+describe('sortMonitors', () => {
+  it('orders DOWN, paused, then rest, stable', async () => {
+    const { sortMonitors } = await import('./stats.js')
+    const ms = [
+      { id: 'a', status: 'UP', isActive: true },
+      { id: 'b', status: 'DOWN', isActive: true },
+      { id: 'c', status: 'UP', isActive: false },
+      { id: 'd', status: 'UP', isActive: true },
+    ]
+    expect(sortMonitors(ms).map((m) => m.id)).toEqual(['b', 'c', 'a', 'd'])
+  })
+})
+
+describe('incidentDuration', () => {
+  it('formats durations', async () => {
+    const { incidentDuration } = await import('./stats.js')
+    expect(incidentDuration('2026-09-25T10:00:00Z', '2026-09-25T10:00:45Z')).toBe('45s')
+    expect(incidentDuration('2026-09-25T10:00:00Z', '2026-09-25T10:12:00Z')).toBe('12m')
+    expect(incidentDuration('2026-09-25T10:00:00Z', '2026-09-25T13:05:00Z')).toBe('3h 5m')
+  })
+})

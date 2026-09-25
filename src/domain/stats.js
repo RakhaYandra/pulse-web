@@ -38,3 +38,24 @@ export function checkDisplay(check) {
     response: check.responseTimeMs != null ? `${check.responseTimeMs} ms` : check.error || 'n/a',
   }
 }
+
+// Attention order: DOWN first, then paused, then the rest (stable).
+export function sortMonitors(monitors = []) {
+  const rank = (m) => (m.status === 'DOWN' ? 0 : !m.isActive ? 1 : 2)
+  return [...monitors]
+    .map((m, i) => [m, i])
+    .sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1])
+    .map(([m]) => m)
+}
+
+// Human duration between two ISO timestamps: "45s", "12m", "3h 5m", "2d 1h".
+export function incidentDuration(startedAt, resolvedAt, nowMs = Date.now()) {
+  const end = resolvedAt ? new Date(resolvedAt).getTime() : nowMs
+  let s = Math.max(0, Math.round((end - new Date(startedAt).getTime()) / 1000))
+  if (s < 60) return `${s}s`
+  const m = Math.floor(s / 60)
+  if (m < 60) return `${m}m`
+  const h = Math.floor(m / 60)
+  if (h < 48) return `${h}h ${m % 60}m`
+  return `${Math.floor(h / 24)}d ${h % 24}h`
+}

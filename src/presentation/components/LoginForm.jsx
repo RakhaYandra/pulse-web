@@ -18,9 +18,9 @@ export function LoginForm({ onLogin, onRegister, error }) {
         <h1>Pulse</h1>
         <p className="muted">API monitoring & incidents</p>
         {error && <div className="error">{error}</div>}
-        <input placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input placeholder="password (min 8)" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        {mode === 'register' && <input placeholder="name" value={name} onChange={(e) => setName(e.target.value)} />}
+        <label>Email<input placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
+        <label>Password (min 8)<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></label>
+        {mode === 'register' && <label>Display name<input placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} />}</label>}
         <button type="submit">{mode === 'login' ? 'Login' : 'Register'}</button>
         <button type="button" className="link" onClick={() => setMode(mode === 'login' ? 'register' : 'login')}>
           {mode === 'login' ? 'Need an account? Register' : 'Have an account? Login'}

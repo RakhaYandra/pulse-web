@@ -8,10 +8,15 @@ export function usePolling(fn, ms, deps = [], onError) {
   const errRef = useRef(onError)
   errRef.current = onError
   useEffect(() => {
-    const run = () => ref.current().catch((ex) => errRef.current?.(ex));
+    const run = () => {
+      if (document.hidden) return Promise.resolve()
+      return ref.current().catch((ex) => errRef.current?.(ex))
+    }
     run()
     const t = setInterval(run, ms)
-    return () => clearInterval(t)
+    const onVisible = () => { if (!document.hidden) run() }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => { clearInterval(t); document.removeEventListener('visibilitychange', onVisible) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 }

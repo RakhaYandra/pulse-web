@@ -8,6 +8,7 @@ export function useDashboard(monitorUC) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
+  const [updatedAt, setUpdatedAt] = useState(null)
 
   async function reload() {
     try {
@@ -15,6 +16,7 @@ export function useDashboard(monitorUC) {
       setSummary(d.summary)
       setMonitors(d.monitors)
       setIncidents(d.incidents)
+      setUpdatedAt(Date.now())
       setLoadError('')
     } catch (ex) {
       if (summary === null) setLoadError(ex.message || 'Failed to load dashboard.')
@@ -49,5 +51,5 @@ export function useDashboard(monitorUC) {
     await reload()
   }
 
-  return { summary, monitors, incidents, error, loading, loadError, reload, create, toggle, remove }
+  return { summary, monitors, incidents, error, loading, loadError, updatedAt, reload, create, toggle, remove }
 }

@@ -6,9 +6,9 @@ export function Spark({ checks }) {
   if (!points.length) return <div className="muted">no data yet</div>
   return (
     <svg width={300} height={60} className="spark">
-      <path d={path} fill="none" stroke="#3b82f6" strokeWidth="2" />
+      <path d={path} fill="none" strokeWidth="2" />
       {points.map((p, i) => (
-        <circle key={i} cx={p.x} cy={p.y} r="3" fill={p.up ? '#22c55e' : '#ef4444'} />
+        <circle key={i} cx={p.x} cy={p.y} r="3" className={p.up ? 'dot-up' : 'dot-down'} fill="currentColor" />
       ))}
     </svg>
   )
