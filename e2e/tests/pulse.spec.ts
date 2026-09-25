@@ -58,3 +58,20 @@ test('pause flips monitor to paused', async ({ page }) => {
   await row.getByRole('button', { name: 'Pause' }).click();
   await expect(row.getByText('PAUSED')).toBeVisible({ timeout: 5000 });
 });
+
+test('click incident opens its monitor', async ({ page }) => {
+  test.setTimeout(180000);
+  const name = 'E2E Incident ' + Date.now();
+  await page.getByRole('button', { name: '+ New' }).click();
+  await page.getByLabel('Name', { exact: true }).fill(name);
+  await page.getByLabel('URL').fill('https://example.com/does-not-exist-404');
+  await page.getByLabel(/Interval/).fill('60');
+  await page.getByRole('button', { name: 'Create monitor' }).click();
+  await page.getByRole('button', { name: 'Monitors' }).click();
+  // failure_threshold defaults to 3: wait for 3 failed 60s-interval checks
+  await page.getByRole('button', { name: 'Incidents (0)' }).click();
+  await expect(page.locator('.row', { hasText: name })).toBeVisible({ timeout: 170000 });
+  await page.locator('.row', { hasText: name }).first().click();
+  await expect(page.getByText('Recent checks')).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText(name).first()).toBeVisible();
+}, 180000);

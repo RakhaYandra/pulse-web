@@ -45,7 +45,7 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
         <button className={tab === 'new' ? 'active' : ''} onClick={() => setTab('new')}>+ New</button>
       </nav>
       {tab === 'monitors' && <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />}
-      {tab === 'incidents' && <IncidentList incidents={incidents} />}
+      {tab === 'incidents' && <IncidentList incidents={incidents} onSelect={onSelect} />}
       {tab === 'new' && <MonitorForm onCreate={create} />}
       <p className="muted freshness">Updated {ago(updatedAt)} · <button className="link" onClick={reload}>Refresh now</button></p>
     </div>

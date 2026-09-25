@@ -20,7 +20,7 @@ function mapCheck(c) {
 
 function mapIncident(i) {
   return {
-    id: i.id, monitorName: i.monitor_name, status: i.status, reason: i.reason,
+    id: i.id, monitorId: i.monitor_id, monitorName: i.monitor_name, status: i.status, reason: i.reason,
     startedAt: i.started_at, resolvedAt: i.resolved_at ?? null,
     failureCount: i.failure_count, recoveryCount: i.recovery_count,
   }
