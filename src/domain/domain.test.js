@@ -70,3 +70,13 @@ describe('incidentDuration', () => {
     expect(incidentDuration('2026-09-25T10:00:00Z', '2026-09-25T13:05:00Z')).toBe('3h 5m')
   })
 })
+
+describe('formatDurationSecs', () => {
+  it('formats seconds', async () => {
+    const { formatDurationSecs } = await import('./stats.js')
+    expect(formatDurationSecs(null)).toBe('n/a')
+    expect(formatDurationSecs(45)).toBe('45s')
+    expect(formatDurationSecs(720)).toBe('12m')
+    expect(formatDurationSecs(11100)).toBe('3h 5m')
+  })
+})

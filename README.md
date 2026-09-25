@@ -3,9 +3,11 @@
 > Ecosystem: [api](https://github.com/RakhaYandra/pulse) · [web](https://github.com/RakhaYandra/pulse-web) (this repo)
 
 React dashboard for the Pulse monitoring API: overview stats, monitor
-list/detail with SVG response-time chart, recent checks, incident history,
-monitor CRUD + pause/resume. No router — state-driven views; data refreshes
-every 15s. Full Clean Architecture (see below).
+list/detail with SVG response-time chart, recent checks, incident history
+(click through to the monitor), per-monitor reliability reports (uptime,
+MTTR, 30-day window), monitor CRUD + pause/resume. No router —
+state-driven views; data refreshes every 15s. Full Clean Architecture
+(see below).
 
 ![Dashboard](docs/dashboard.png)
 
@@ -38,8 +40,8 @@ then serves it via nginx.
 ## Test
 
 ```bash
-npx vitest run          # 15 unit tests (domain + use-cases, fake gateways)
-npm test --prefix e2e   # 5 Playwright tests, black-box (needs API + web up)
+npx vitest run          # 18 unit tests (domain + use-cases, fake gateways)
+npm test --prefix e2e   # 7 Playwright tests, black-box (needs API + web up)
 BASE_URL=http://other:5173 npm test --prefix e2e   # against another frontend
 ```
 

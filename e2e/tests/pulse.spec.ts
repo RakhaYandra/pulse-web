@@ -75,3 +75,15 @@ test('click incident opens its monitor', async ({ page }) => {
   await expect(page.getByText('Recent checks')).toBeVisible({ timeout: 10000 });
   await expect(page.getByText(name).first()).toBeVisible();
 }, 180000);
+
+test('reports tab renders reliability table', async ({ page }) => {
+  const name = 'E2E Report ' + Date.now();
+  await page.getByRole('button', { name: '+ New' }).click();
+  await page.getByLabel('Name', { exact: true }).fill(name);
+  await page.getByLabel('URL').fill('https://example.com');
+  await page.getByRole('button', { name: 'Create monitor' }).click();
+  await page.getByRole('button', { name: 'Reports' }).click();
+  await expect(page.getByText('Per-monitor reliability')).toBeVisible({ timeout: 10000 });
+  await expect(page.getByRole('columnheader', { name: 'MTTR' })).toBeVisible();
+  await expect(page.getByText(name)).toBeVisible();
+});

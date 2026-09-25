@@ -33,7 +33,7 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
       <h3>Recent checks</h3>
       <div className="table-scroll">
       <table>
-        <thead><tr><th>Time</th><th>Status</th><th>Code</th><th>Response</th></tr></thead>
+        <thead><tr><th scope="col">Time</th><th scope="col">Status</th><th scope="col">Code</th><th scope="col">Response</th></tr></thead>
         <tbody>
           {checks.map((c, i) => {
             const d = checkDisplay(c)

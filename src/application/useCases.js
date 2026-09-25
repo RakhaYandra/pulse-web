@@ -53,5 +53,6 @@ export function createMonitorUseCases({ monitorGateway }) {
       checks,
       incidents,
     })),
+    loadReliability: (days = 30) => monitorGateway.reliability(days),
   }
 }

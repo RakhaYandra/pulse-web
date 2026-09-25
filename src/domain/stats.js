@@ -59,3 +59,15 @@ export function incidentDuration(startedAt, resolvedAt, nowMs = Date.now()) {
   if (h < 48) return `${h}h ${m % 60}m`
   return `${Math.floor(h / 24)}d ${h % 24}h`
 }
+
+// Format a seconds count like incidentDuration ("45s", "12m", "3h 5m").
+export function formatDurationSecs(total) {
+  if (total == null) return 'n/a'
+  let s = Math.max(0, Math.round(total))
+  if (s < 60) return `${s}s`
+  const m = Math.floor(s / 60)
+  if (m < 60) return `${m}m`
+  const h = Math.floor(m / 60)
+  if (h < 48) return `${h}h ${m % 60}m`
+  return `${Math.floor(h / 24)}d ${h % 24}h`
+}

@@ -57,6 +57,12 @@ export function createApiGateway(http) {
     checks: async (id) => (await http.get(`/api/v1/monitors/${id}/checks?limit=20`)).map(mapCheck),
     monitorIncidents: async (id) => (await http.get(`/api/v1/monitors/${id}/incidents`)).map(mapIncident),
     incidents: async () => (await http.get('/api/v1/incidents')).map(mapIncident),
+    reliability: async (days = 30) => (await http.get(`/api/v1/reports/reliability?days=${days}`)).map((r) => ({
+      monitorId: r.monitor_id, monitorName: r.monitor_name,
+      incidentsTotal: r.incidents_total, incidentsOpen: r.incidents_open,
+      mttrSeconds: r.mttr_seconds, uptimePct: r.uptime_pct,
+      checksTotal: r.checks_total, windowDays: r.window_days,
+    })),
     summary: () => http.get('/api/v1/dashboard/summary').then((s) => ({
       totalMonitors: s.total_monitors, up: s.up, down: s.down,
       activeIncidents: s.active_incidents, uptime24h: s.uptime_24h,
