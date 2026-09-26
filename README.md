@@ -50,7 +50,7 @@ relies on is owned by the backend repo (`qa/collection.json`, Newman 20/20).
 
 ## Architecture
 
-Full Clean Architecture ([ADR-001](docs/ADR-001-fe-ca.md)):
+Full Clean Architecture ([ADR-001-fe-ca](https://github.com/RakhaYandra/pulse-docs/blob/main/ADR-001-fe-ca.md)):
 
 ```
 domain/          entities + pure stats (uptimePct, avgResponseMs,
