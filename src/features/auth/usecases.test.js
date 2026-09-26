@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { createAuthUseCases, createMonitorUseCases } from './useCases.js'
+import { createAuthUseCases } from './usecases.js'
 
 function fakeGateways() {
   const calls = []
@@ -61,35 +61,5 @@ describe('auth use-cases', () => {
     const auth = createAuthUseCases({ authGateway, tokenStore: store })
     expect(await auth.restoreSession()).toBeNull()
     expect(authGateway.me).not.toHaveBeenCalled()
-  })
-})
-
-describe('monitor use-cases', () => {
-  it('loadDashboard aggregates three calls', async () => {
-    const { monitorGateway } = fakeGateways()
-    const uc = createMonitorUseCases({ monitorGateway })
-    const d = await uc.loadDashboard()
-    expect(d.monitors).toHaveLength(2)
-    expect(d.summary.totalMonitors).toBe(2)
-  })
-  it('createMonitor normalizes before sending', async () => {
-    const { monitorGateway, calls } = fakeGateways()
-    const uc = createMonitorUseCases({ monitorGateway })
-    await uc.createMonitor({ name: ' N ', url: 'https://x.com', intervalSeconds: '120' })
-    expect(calls[0]).toMatchObject({ name: 'N', intervalSeconds: 120, timeoutSeconds: 5 })
-  })
-  it('togglePause flips active flag', async () => {
-    const { monitorGateway } = fakeGateways()
-    const uc = createMonitorUseCases({ monitorGateway })
-    const out = await uc.togglePause({ id: 'm1', isActive: true })
-    expect(monitorGateway.setActive).toHaveBeenCalledWith('m1', false)
-    expect(out.isActive).toBe(false)
-  })
-  it('loadMonitorDetail picks monitor by id', async () => {
-    const { monitorGateway } = fakeGateways()
-    const uc = createMonitorUseCases({ monitorGateway })
-    const d = await uc.loadMonitorDetail('m2')
-    expect(d.monitor.name).toBe('Two')
-    expect(d.checks).toHaveLength(1)
   })
 })

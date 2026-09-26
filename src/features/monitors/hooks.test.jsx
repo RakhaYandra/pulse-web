@@ -1,9 +1,8 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
-import { usePolling } from './usePolling.js'
-import { useDashboard } from './useDashboard.js'
-import { useMonitorDetail } from './useMonitorDetail.js'
+import { usePolling } from '../../hooks/usePolling.js'
+import { useDashboard, useMonitorDetail } from './hooks.js'
 
 function fakeUC(over = {}) {
   return {

@@ -1,42 +1,12 @@
-import { useEffect, useState } from 'react'
-import { useDashboard } from '../hooks/useDashboard.js'
-import { countOpen } from '../../domain/stats.js'
-import { SummaryStats } from './Stats.jsx'
-import { MonitorList, IncidentList, ReliabilityTable } from './Lists.jsx'
-import { MonitorForm } from './MonitorForm.jsx'
-
-function ago(ts) {
-  if (!ts) return ''
-  const s = Math.max(0, Math.round((Date.now() - ts) / 1000))
-  return s < 5 ? 'just now' : s < 60 ? `${s}s ago` : `${Math.floor(s / 60)}m ago`
-}
-
-export function ReportsView({ monitorUC }) {
-  const [rows, setRows] = useState(null)
-  const [error, setError] = useState('')
-  useEffect(() => {
-    let cancelled = false
-    monitorUC.loadReliability(30).then(
-      (r) => {
-        if (!cancelled) setRows(r)
-      },
-      (ex) => {
-        if (!cancelled) setError(ex.message || 'Failed to load report.')
-      },
-    )
-    return () => {
-      cancelled = true
-    }
-  }, [monitorUC])
-  if (error) return <p className="error">{error}</p>
-  if (rows === null) return <p className="muted">Loading report…</p>
-  return (
-    <div>
-      <p className="muted">Per-monitor reliability, last 30 days. MTTR averages resolved incidents only.</p>
-      <ReliabilityTable rows={rows} />
-    </div>
-  )
-}
+import { useState } from 'react'
+import { useDashboard } from '../features/monitors/hooks.js'
+import { countOpen } from '../domain/stats.js'
+import { ago } from '../utils/formatDate.js'
+import { SummaryStats } from '../components/ui/Stats.jsx'
+import { MonitorList } from '../features/monitors/components/MonitorList.jsx'
+import { IncidentList } from '../features/incidents/components/IncidentList.jsx'
+import { ReportsView } from '../features/reports/components/ReportsView.jsx'
+import { MonitorForm } from '../features/monitors/components/MonitorForm.jsx'
 
 export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
   const { summary, monitors, incidents, loading, loadError, updatedAt, reload, create, toggle, remove } =

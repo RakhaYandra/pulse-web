@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
-import { createHttpClient } from './infrastructure/httpClient.js'
-import { createApiGateway } from './infrastructure/apiGateway.js'
-import { createLocalTokenStore } from './infrastructure/tokenStore.js'
-import { createAuthUseCases, createMonitorUseCases } from './application/useCases.js'
-import { useAuth } from './presentation/hooks/useAuth.js'
-import { LoginForm } from './presentation/components/LoginForm.jsx'
-import { DashboardScreen } from './presentation/components/DashboardScreen.jsx'
-import { MonitorDetailScreen } from './presentation/components/MonitorDetailScreen.jsx'
+import { createHttpClient } from '../lib/httpClient.js'
+import { createLocalTokenStore } from '../lib/tokenStore.js'
+import { createAuthApi } from '../features/auth/api.js'
+import { createMonitorApi } from '../features/monitors/api.js'
+import { createAuthUseCases } from '../features/auth/usecases.js'
+import { createMonitorUseCases } from '../features/monitors/usecases.js'
+import { useAuth } from '../features/auth/hooks.js'
+import { LoginForm } from '../features/auth/components/LoginForm.jsx'
+import { DashboardScreen } from './DashboardScreen.jsx'
+import { MonitorDetailScreen } from '../features/monitors/components/MonitorDetailScreen.jsx'
 
 // Composition root: the only place that wires layers together.
 const tokenStore = createLocalTokenStore()
@@ -14,9 +16,8 @@ const http = createHttpClient({
   baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:8080',
   getToken: () => tokenStore.load(),
 })
-const gateway = createApiGateway(http)
-const authUC = createAuthUseCases({ authGateway: gateway, tokenStore })
-const monitorUC = createMonitorUseCases({ monitorGateway: gateway })
+const authUC = createAuthUseCases({ authGateway: createAuthApi(http), tokenStore })
+const monitorUC = createMonitorUseCases({ monitorGateway: createMonitorApi(http) })
 
 function Shell() {
   const auth = useAuth(authUC)

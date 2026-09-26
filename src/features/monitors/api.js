@@ -1,5 +1,7 @@
-// API gateway: endpoint knowledge + JSON (snake_case) → domain (camelCase)
-// mapping. Only layer that knows the wire shapes.
+// Monitoring endpoints (monitors, checks, incidents, reports, summary).
+// One gateway because they share one wire contract, consumed together by the
+// dashboard hooks. Auth lives separately (features/auth/api.js): tokens are
+// a different seam. Takes the shared http client.
 
 function mapMonitor(m) {
   return {
@@ -52,26 +54,14 @@ function toWire(input) {
   }
 }
 
-export function createApiGateway(http) {
+export function createMonitorApi(http) {
   return {
-    // auth
-    async login(email, password) {
-      const data = await http.post('/api/v1/auth/login', { email, password })
-      return { token: data.token, user: { id: data.user.id, email: data.user.email, name: data.user.name } }
-    },
-    async register(email, password, name) {
-      const data = await http.post('/api/v1/auth/register', { email, password, name })
-      return { token: data.token, user: { id: data.user.id, email: data.user.email, name: data.user.name } }
-    },
-    me: () => http.get('/api/v1/auth/me'),
-    // monitors
     monitors: async () => (await http.get('/api/v1/monitors')).map(mapMonitor),
     createMonitor: async (input) => mapMonitor(await http.post('/api/v1/monitors', toWire(input))),
     async setActive(id, active) {
       return mapMonitor(await http.post(`/api/v1/monitors/${id}/${active ? 'resume' : 'pause'}`))
     },
     removeMonitor: (id) => http.del(`/api/v1/monitors/${id}`),
-    // reads
     checks: async (id) => (await http.get(`/api/v1/monitors/${id}/checks?limit=20`)).map(mapCheck),
     monitorIncidents: async (id) => (await http.get(`/api/v1/monitors/${id}/incidents`)).map(mapIncident),
     incidents: async () => (await http.get('/api/v1/incidents')).map(mapIncident),

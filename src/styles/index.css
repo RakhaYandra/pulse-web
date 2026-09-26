@@ -1,4 +1,4 @@
-@import './presentation/tokens.css';
+@import './tokens.css';
 
 :root {
   font-family: var(--font-sans);

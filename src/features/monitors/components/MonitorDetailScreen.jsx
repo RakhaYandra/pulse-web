@@ -1,8 +1,9 @@
-import { useMonitorDetail } from '../hooks/useMonitorDetail.js'
-import { uptimePct, avgResponseMs, checkDisplay, incidentDuration } from '../../domain/stats.js'
-import { Dot } from './Dot.jsx'
-import { Spark } from './Spark.jsx'
-import { DetailStats } from './Stats.jsx'
+import { useMonitorDetail } from '../hooks.js'
+import { uptimePct, avgResponseMs, checkDisplay, incidentDuration } from '../../../domain/stats.js'
+import { formatDateTime, formatCheckTime } from '../../../utils/formatDate.js'
+import { Dot } from '../../../components/ui/Dot.jsx'
+import { Spark } from '../../../components/ui/Spark.jsx'
+import { DetailStats } from '../../../components/ui/Stats.jsx'
 
 export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
   const { monitor: m, checks, incidents, loading, loadError, reload } = useMonitorDetail(monitorUC, id)
@@ -72,13 +73,7 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
               const d = checkDisplay(c)
               return (
                 <tr key={`${c.checkedAt}-${i}`}>
-                  <td>
-                    {new Date(c.checkedAt).toLocaleDateString(undefined, {
-                      month: 'numeric',
-                      day: 'numeric',
-                    })}{' '}
-                    {new Date(c.checkedAt).toLocaleTimeString()}
-                  </td>
+                  <td>{formatCheckTime(c.checkedAt)}</td>
                   <td>
                     {d.mark} {c.status}
                   </td>
@@ -98,8 +93,8 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged }) {
           <span className="mono">{incidentDuration(in_.startedAt, in_.resolvedAt)}</span>
           <br />
           <span className="muted">
-            {new Date(in_.startedAt).toLocaleString()}
-            {in_.resolvedAt ? ' → ' + new Date(in_.resolvedAt).toLocaleString() : ' (ongoing)'}
+            {formatDateTime(in_.startedAt)}
+            {in_.resolvedAt ? ' → ' + formatDateTime(in_.resolvedAt) : ' (ongoing)'}
           </span>
         </div>
       ))}

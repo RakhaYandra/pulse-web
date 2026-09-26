@@ -53,21 +53,27 @@ relies on is owned by the backend repo (`qa/collection.json`, Newman 20/20).
 Full Clean Architecture ([ADR-001-fe-ca](https://github.com/RakhaYandra/pulse-docs/blob/main/ADR-001-fe-ca.md)):
 
 ```
-domain/          entities + pure stats (uptimePct, avgResponseMs,
-                 sparkPoints, countOpen) — zero React/fetch
-application/     ports (gateway shapes) + use-cases (auth, dashboard,
-                 monitors, detail) — constructor-injected, fake-tested
-infrastructure/  httpClient (transport), apiGateway (endpoint + JSON→domain
-                 mapping), tokenStore (localStorage adapter)
-presentation/    pure components + hooks (polling + state)
-App.jsx          composition root — the only place layers are wired
+domain/          entities + pure stats — zero React/fetch
+features/{auth,monitors,incidents,reports}/
+                 per-feature api (endpoint + JSON→domain mapping),
+                 use-cases (constructor-injected, fake-tested),
+                 hooks + components colocated
+components/ui/   shared presentational primitives (Dot, Spark, Stats)
+hooks/           shared usePolling primitive
+lib/             httpClient (transport), tokenStore (localStorage adapter)
+utils/           display formatters (formatDate)
+styles/          global CSS + design tokens
+domain/          entities.js, stats.js (+ tests)
+app/             App.jsx (composition root) + DashboardScreen.jsx (shell)
 ```
 
 Layer rules (grep-verified): `domain/` has no React/fetch/localStorage;
-`application/` has none either; views never import infrastructure (only via
-hooks/props).
+feature code never imports another feature's internals (only via `app/`
+composition); views never touch transport (only via hooks/props).
+Incidents/reports consume the shared monitoring gateway — one wire contract,
+no mapper duplication (documented deviation from one-api-per-feature).
 
-Styling: global CSS (`index.css`) + design tokens (`presentation/tokens.css`),
+Styling: global CSS (`styles/index.css`) + design tokens (`styles/tokens.css`),
 no CSS Modules — deliberate at this size (one 60-line stylesheet, no class
 collisions); revisit if component count doubles.
 
@@ -78,16 +84,21 @@ Auth: JWT from login/register, stored via `TokenStore`, sent as
 
 ```
 src/
-├── domain/           entities.js, stats.js (+ tests)
-├── application/      useCases.js (+ fake-gateway tests)
-├── infrastructure/   httpClient.js, apiGateway.js, tokenStore.js
-├── presentation/
-│   ├── components/   LoginForm, DashboardScreen, MonitorDetailScreen,
-│   │                 MonitorList, MonitorForm, Spark, Stats, Dot, Lists
-│   └── hooks/        useAuth, useDashboard, useMonitorDetail, usePolling
-├── App.jsx           composition root
-└── main.jsx + index.css
-e2e/                   Playwright suite (package.json, config, tests/)
+├── domain/           entities.js, stats.js (+ tests, shared kernel)
+├── app/              App.jsx (composition root), DashboardScreen.jsx (shell)
+├── features/
+│   ├── auth/         api.js, usecases.js (+ tests), hooks.js, components/LoginForm.jsx
+│   ├── monitors/     api.js, usecases.js (+ tests), hooks.js,
+│   │                 components/MonitorList|MonitorForm|MonitorDetailScreen.jsx
+│   ├── incidents/    components/IncidentList.jsx (data via monitors hook)
+│   └── reports/      components/ReliabilityTable|ReportsView.jsx
+├── components/ui/    Dot, Spark, Stats (used by 2+ features)
+├── hooks/            usePolling.js (shared primitive)
+├── lib/              httpClient.js, tokenStore.js
+├── utils/            formatDate.js (was inline-duplicated ×3)
+├── styles/           index.css, tokens.css
+└── main.jsx
+e2e/                   Playwright suite — lives in pulse-qa repo
 ```
 
 Backend + engine: [RakhaYandra/pulse](https://github.com/RakhaYandra/pulse).
