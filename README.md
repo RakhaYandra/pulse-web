@@ -1,6 +1,6 @@
 # Pulse Web — monitoring dashboard
 
-> Ecosystem: [api](https://github.com/RakhaYandra/pulse) · [web](https://github.com/RakhaYandra/pulse-web) (this repo)
+> Ecosystem: [api](https://github.com/RakhaYandra/pulse) · [web](https://github.com/RakhaYandra/pulse-web) (this repo) · [docs](https://github.com/RakhaYandra/pulse-docs/releases)
 
 React dashboard for the Pulse monitoring API: overview stats, monitor
 list/detail with SVG response-time chart, recent checks, incident history
