@@ -67,6 +67,10 @@ Layer rules (grep-verified): `domain/` has no React/fetch/localStorage;
 `application/` has none either; views never import infrastructure (only via
 hooks/props).
 
+Styling: global CSS (`index.css`) + design tokens (`presentation/tokens.css`),
+no CSS Modules — deliberate at this size (one 60-line stylesheet, no class
+collisions); revisit if component count doubles.
+
 Auth: JWT from login/register, stored via `TokenStore`, sent as
 `Authorization: Bearer`; 401 on restore clears the session back to login.
 

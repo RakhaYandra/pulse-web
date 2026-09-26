@@ -3,7 +3,18 @@ import { createAuthUseCases, createMonitorUseCases } from './useCases.js'
 
 function fakeGateways() {
   const calls = []
-  const store = { token: 't0', save(t) { this.token = t }, clear() { this.token = null }, load() { return this.token } }
+  const store = {
+    token: 't0',
+    save(t) {
+      this.token = t
+    },
+    clear() {
+      this.token = null
+    },
+    load() {
+      return this.token
+    },
+  }
   const authGateway = {
     login: vi.fn(async () => ({ token: 'tok-1', user: { id: 'u1', email: 'a@b.c', name: 'A' } })),
     register: vi.fn(async () => ({ token: 'tok-2', user: { id: 'u2', email: 'n@b.c', name: 'N' } })),
@@ -17,7 +28,10 @@ function fakeGateways() {
     summary: vi.fn(async () => ({ totalMonitors: 2 })),
     monitors: vi.fn(async () => monitors),
     incidents: vi.fn(async () => [{ status: 'OPEN' }]),
-    createMonitor: vi.fn(async (input) => { calls.push(input); return { id: 'm3', ...input } }),
+    createMonitor: vi.fn(async (input) => {
+      calls.push(input)
+      return { id: 'm3', ...input }
+    }),
     setActive: vi.fn(async (id, active) => ({ id, isActive: active })),
     removeMonitor: vi.fn(async () => ({})),
     checks: vi.fn(async () => [{ status: 'UP' }]),

@@ -5,12 +5,21 @@ import { uptimePct, avgResponseMs, countOpen, sparkPoints, checkDisplay } from '
 describe('normalizeMonitorInput', () => {
   it('applies defaults', () => {
     expect(normalizeMonitorInput({ name: ' P ', url: ' https://x.com ' })).toEqual({
-      name: 'P', url: 'https://x.com', intervalSeconds: 300,
-      timeoutSeconds: 5, failureThreshold: 3, recoveryThreshold: 2,
+      name: 'P',
+      url: 'https://x.com',
+      intervalSeconds: 300,
+      timeoutSeconds: 5,
+      failureThreshold: 3,
+      recoveryThreshold: 2,
     })
   })
   it('coerces numeric strings', () => {
-    const out = normalizeMonitorInput({ name: 'a', url: 'https://x.com', intervalSeconds: '120', timeoutSeconds: '4' })
+    const out = normalizeMonitorInput({
+      name: 'a',
+      url: 'https://x.com',
+      intervalSeconds: '120',
+      timeoutSeconds: '4',
+    })
     expect(out.intervalSeconds).toBe(120)
     expect(out.timeoutSeconds).toBe(4)
   })
@@ -45,7 +54,11 @@ describe('stats', () => {
   })
   it('checkDisplay', () => {
     expect(checkDisplay({ status: 'UP', responseTimeMs: 50 })).toMatchObject({ mark: '✓', response: '50 ms' })
-    expect(checkDisplay({ status: 'ERROR', error: 'boom' })).toMatchObject({ mark: '✗', code: 'n/a', response: 'boom' })
+    expect(checkDisplay({ status: 'ERROR', error: 'boom' })).toMatchObject({
+      mark: '✗',
+      code: 'n/a',
+      response: 'boom',
+    })
   })
 })
 

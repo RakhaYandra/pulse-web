@@ -8,7 +8,14 @@ export function Spark({ checks }) {
     <svg width={300} height={60} className="spark">
       <path d={path} fill="none" strokeWidth="2" />
       {points.map((p, i) => (
-        <circle key={`${p.x.toFixed(1)}-${p.y.toFixed(1)}-${i}`} cx={p.x} cy={p.y} r="3" className={p.up ? 'dot-up' : 'dot-down'} fill="currentColor" />
+        <circle
+          key={`${p.x.toFixed(1)}-${p.y.toFixed(1)}-${i}`}
+          cx={p.x}
+          cy={p.y}
+          r="3"
+          className={p.up ? 'dot-up' : 'dot-down'}
+          fill="currentColor"
+        />
       ))}
     </svg>
   )

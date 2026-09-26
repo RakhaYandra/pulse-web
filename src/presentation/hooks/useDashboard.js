@@ -51,5 +51,17 @@ export function useDashboard(monitorUC) {
     await reload()
   }
 
-  return { summary, monitors, incidents, error, loading, loadError, updatedAt, reload, create, toggle, remove }
+  return {
+    summary,
+    monitors,
+    incidents,
+    error,
+    loading,
+    loadError,
+    updatedAt,
+    reload,
+    create,
+    toggle,
+    remove,
+  }
 }

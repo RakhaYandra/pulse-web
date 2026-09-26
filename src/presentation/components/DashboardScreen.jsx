@@ -17,10 +17,16 @@ export function ReportsView({ monitorUC }) {
   useEffect(() => {
     let cancelled = false
     monitorUC.loadReliability(30).then(
-      (r) => { if (!cancelled) setRows(r) },
-      (ex) => { if (!cancelled) setError(ex.message || 'Failed to load report.') },
+      (r) => {
+        if (!cancelled) setRows(r)
+      },
+      (ex) => {
+        if (!cancelled) setError(ex.message || 'Failed to load report.')
+      },
     )
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [monitorUC])
   if (error) return <p className="error">{error}</p>
   if (rows === null) return <p className="muted">Loading report…</p>
@@ -33,10 +39,16 @@ export function ReportsView({ monitorUC }) {
 }
 
 export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
-  const { summary, monitors, incidents, loading, loadError, updatedAt, reload, create, toggle, remove } = useDashboard(monitorUC)
+  const { summary, monitors, incidents, loading, loadError, updatedAt, reload, create, toggle, remove } =
+    useDashboard(monitorUC)
   const [tab, setTab] = useState('monitors')
 
-  if (loading) return <div className="wrap"><p className="muted">Loading monitors…</p></div>
+  if (loading)
+    return (
+      <div className="wrap">
+        <p className="muted">Loading monitors…</p>
+      </div>
+    )
   if (loadError) {
     return (
       <div className="wrap">
@@ -52,25 +64,48 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
     <div className="wrap">
       <header>
         <h1>Pulse</h1>
-        <div>{user.email} <button className="link" onClick={onLogout}>logout</button></div>
+        <div>
+          {user.email}{' '}
+          <button className="link" onClick={onLogout}>
+            logout
+          </button>
+        </div>
       </header>
       <SummaryStats summary={summary} />
       {open > 0 && (
         <button className="banner" onClick={() => setTab('incidents')}>
-          <strong>{open} open incident{open === 1 ? '' : 's'}</strong>. Attention needed. View details.
+          <strong>
+            {open} open incident{open === 1 ? '' : 's'}
+          </strong>
+          . Attention needed. View details.
         </button>
       )}
       <nav>
-        <button className={tab === 'monitors' ? 'active' : ''} onClick={() => setTab('monitors')}>Monitors</button>
-        <button className={tab === 'incidents' ? 'active' : ''} onClick={() => setTab('incidents')}>Incidents ({open})</button>
-        <button className={tab === 'reports' ? 'active' : ''} onClick={() => setTab('reports')}>Reports</button>
-        <button className={tab === 'new' ? 'active' : ''} onClick={() => setTab('new')}>+ New</button>
+        <button className={tab === 'monitors' ? 'active' : ''} onClick={() => setTab('monitors')}>
+          Monitors
+        </button>
+        <button className={tab === 'incidents' ? 'active' : ''} onClick={() => setTab('incidents')}>
+          Incidents ({open})
+        </button>
+        <button className={tab === 'reports' ? 'active' : ''} onClick={() => setTab('reports')}>
+          Reports
+        </button>
+        <button className={tab === 'new' ? 'active' : ''} onClick={() => setTab('new')}>
+          + New
+        </button>
       </nav>
-      {tab === 'monitors' && <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />}
+      {tab === 'monitors' && (
+        <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
+      )}
       {tab === 'incidents' && <IncidentList incidents={incidents} onSelect={onSelect} />}
       {tab === 'reports' && <ReportsView monitorUC={monitorUC} />}
       {tab === 'new' && <MonitorForm onCreate={create} />}
-      <p className="muted freshness">Updated {ago(updatedAt)} · <button className="link" onClick={reload}>Refresh now</button></p>
+      <p className="muted freshness">
+        Updated {ago(updatedAt)} ·{' '}
+        <button className="link" onClick={reload}>
+          Refresh now
+        </button>
+      </p>
     </div>
   )
 }

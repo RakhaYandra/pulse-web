@@ -23,7 +23,11 @@ function Shell() {
   const [selectedId, setSelectedId] = useState(null)
   const [dashKey, setDashKey] = useState(0)
 
-  useEffect(() => { auth.restore() }, [])
+  // Restore once on mount (restore is ref-stable, see useAuth).
+  const { restore } = auth
+  useEffect(() => {
+    restore()
+  }, [restore])
 
   if (auth.checking) return <div className="wrap muted">loading…</div>
   if (!auth.user) {

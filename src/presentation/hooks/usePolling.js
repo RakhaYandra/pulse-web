@@ -14,9 +14,14 @@ export function usePolling(fn, ms, deps = [], onError) {
     }
     run()
     const t = setInterval(run, ms)
-    const onVisible = () => { if (!document.hidden) run() }
+    const onVisible = () => {
+      if (!document.hidden) run()
+    }
     document.addEventListener('visibilitychange', onVisible)
-    return () => { clearInterval(t); document.removeEventListener('visibilitychange', onVisible) }
+    return () => {
+      clearInterval(t)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 }

@@ -1,16 +1,17 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 export function useAuth(authUC) {
   const [user, setUser] = useState(null)
   const [checking, setChecking] = useState(true)
   const [error, setError] = useState('')
 
-  async function restore() {
+  // Stable across renders (only stable setters + module singleton inside).
+  const restore = useCallback(async () => {
     setChecking(true)
     const u = await authUC.restoreSession()
     setUser(u)
     setChecking(false)
-  }
+  }, [authUC])
 
   async function login(email, password) {
     setError('')

@@ -12,14 +12,34 @@ export function MonitorList({ monitors, onSelect, onToggle, onRemove }) {
       tabIndex={0}
       aria-label={`Open ${m.name}`}
       onClick={() => onSelect(m.id)}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(m.id) } }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onSelect(m.id)
+        }
+      }}
     >
-      <div><b>{m.name}</b> <Dot status={m.status} /><br /><span className="muted">{m.url} · every {m.intervalSeconds}s{m.isActive ? '' : ' · PAUSED'}</span></div>
+      <div>
+        <b>{m.name}</b> <Dot status={m.status} />
+        <br />
+        <span className="muted">
+          {m.url} · every {m.intervalSeconds}s{m.isActive ? '' : ' · PAUSED'}
+        </span>
+      </div>
       <div onClick={(e) => e.stopPropagation()}>
-        {m.isActive
-          ? <button onClick={() => onToggle(m)}>Pause</button>
-          : <button onClick={() => onToggle(m)}>Resume</button>}
-        <button className="danger" onClick={() => { if (confirm('Delete?')) onRemove(m.id) }}>Delete</button>
+        {m.isActive ? (
+          <button onClick={() => onToggle(m)}>Pause</button>
+        ) : (
+          <button onClick={() => onToggle(m)}>Resume</button>
+        )}
+        <button
+          className="danger"
+          onClick={() => {
+            if (confirm('Delete?')) onRemove(m.id)
+          }}
+        >
+          Delete
+        </button>
       </div>
     </div>
   ))
@@ -35,9 +55,22 @@ export function IncidentList({ incidents, onSelect }) {
       tabIndex={0}
       aria-label={`Open monitor ${in_.monitorName}`}
       onClick={() => onSelect?.(in_.monitorId)}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect?.(in_.monitorId) } }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onSelect?.(in_.monitorId)
+        }
+      }}
     >
-      <div><b>{in_.status}</b>: {in_.monitorName} · <span className="mono">{incidentDuration(in_.startedAt, in_.resolvedAt)}</span><br /><span className="muted">{in_.reason} · {new Date(in_.startedAt).toLocaleString()}{in_.resolvedAt ? ' → resolved' : ''}</span></div>
+      <div>
+        <b>{in_.status}</b>: {in_.monitorName} ·{' '}
+        <span className="mono">{incidentDuration(in_.startedAt, in_.resolvedAt)}</span>
+        <br />
+        <span className="muted">
+          {in_.reason} · {new Date(in_.startedAt).toLocaleString()}
+          {in_.resolvedAt ? ' → resolved' : ''}
+        </span>
+      </div>
     </div>
   ))
 }
@@ -47,11 +80,27 @@ export function ReliabilityTable({ rows }) {
   return (
     <div className="table-scroll">
       <table>
-        <thead><tr><th scope="col">Monitor</th><th scope="col">Uptime</th><th scope="col">MTTR</th><th scope="col">Incidents</th><th scope="col">Checks</th></tr></thead>
+        <thead>
+          <tr>
+            <th scope="col">Monitor</th>
+            <th scope="col">Uptime</th>
+            <th scope="col">MTTR</th>
+            <th scope="col">Incidents</th>
+            <th scope="col">Checks</th>
+          </tr>
+        </thead>
         <tbody>
           {rows.map((r) => (
             <tr key={r.monitorId}>
-              <td>{r.monitorName}{r.incidentsOpen > 0 && <span className="dot-down" aria-label="has open incidents"> ●</span>}</td>
+              <td>
+                {r.monitorName}
+                {r.incidentsOpen > 0 && (
+                  <span className="dot-down" aria-label="has open incidents">
+                    {' '}
+                    ●
+                  </span>
+                )}
+              </td>
               <td className="mono">{r.uptimePct.toFixed(2)}%</td>
               <td className="mono">{formatDurationSecs(r.mttrSeconds)}</td>
               <td>{r.incidentsTotal}</td>
