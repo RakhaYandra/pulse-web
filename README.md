@@ -9,9 +9,9 @@ MTTR, 30-day window), monitor CRUD + pause/resume. No router —
 state-driven views; data refreshes every 15s. Full Clean Architecture
 (see below).
 
-![Dashboard](docs/dashboard.png)
+![Dashboard](https://raw.githubusercontent.com/RakhaYandra/pulse-docs/main/dashboard.png)
 
-![Monitor detail](docs/detail.png)
+![Monitor detail](https://raw.githubusercontent.com/RakhaYandra/pulse-docs/main/detail.png)
 
 ## Dev
 
