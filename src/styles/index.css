@@ -67,11 +67,21 @@ button.link {
   background: none;
   color: var(--focus-ring);
 }
-button.danger {
-  background: var(--surface-2);
+button.danger,
+.row button.danger {
+  background: var(--danger-solid);
+  color: #ffffff;
 }
-button.danger:hover {
-  background: var(--danger-bg);
+button.danger:hover,
+.row button.danger:hover {
+  background: var(--danger-solid-hover);
+}
+button.logout {
+  background: var(--danger-solid);
+  color: #ffffff;
+}
+button.logout:hover {
+  background: var(--danger-solid-hover);
 }
 nav button {
   background: var(--surface);
@@ -95,7 +105,8 @@ nav button.active {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  min-width: 96px;
+  flex: 1;
+  min-width: 140px;
 }
 .stat b {
   font-size: 22px;
@@ -140,6 +151,7 @@ td {
   padding: 6px 10px;
   font-size: 13px;
   background: var(--surface-2);
+  color: #ffffff;
 }
 .dot-up {
   color: var(--ok);
@@ -185,9 +197,8 @@ header {
   border-bottom: 1px solid var(--border);
 }
 .topbar-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 8px 16px;
+  margin: 0;
+  padding: 8px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -227,7 +238,7 @@ tbody tr:hover {
   font-family: var(--font-mono);
 }
 .wrap-wide {
-  max-width: 1200px;
+  max-width: 1400px;
 }
 .dash-grid {
   display: grid;
@@ -236,7 +247,8 @@ tbody tr:hover {
   align-items: start;
 }
 .dash-grid h3 {
-  margin-top: 8px;
+  margin: 12px 0;
+  line-height: 38px;
 }
 .table-scroll {
   overflow-x: auto;

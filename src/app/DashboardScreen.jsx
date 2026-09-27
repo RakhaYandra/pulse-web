@@ -37,7 +37,7 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
           <h1>Pulse</h1>
           <div>
             {user.email}{' '}
-            <button className="link" onClick={onLogout}>
+            <button className="logout" onClick={onLogout}>
               logout
             </button>
           </div>
