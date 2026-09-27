@@ -1,26 +1,27 @@
-/* Design tokens (DESIGN.md). Single source for palette, type, radii, spacing.
-   Status colors follow ops convention (green = healthy, red = attention);
-   blue accent kept from product identity, darkened to #2563eb so white
-   text passes AA (5.17). Muted #94a3b8 passes on both bg and surface. */
+/* Design direction (owner brief, adapted from WattVision tokens for Pulse):
+   clinical ops console, dark. Cyan is the single data/action accent;
+   white-on-cyan fails contrast, so text on accent is near-black (#121212).
+   Muted #98989D passes AA on surface. Status colors follow ops convention.
+   ONLY product-external font load: Inter + JetBrains Mono (system fallback). */
 :root {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --surface-2: #334155;
-  --border: #334155;
-  --text: #e2e8f0;
-  --muted: #94a3b8;
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --accent-contrast: #ffffff;
-  --focus-ring: #93c5fd;
-  --ok: #22c55e;
-  --bad: #ef4444;
-  --idle: #9ca3af;
-  --danger-bg: #7f1d1d;
+  --bg: #121212;
+  --surface: #1e1e1e;
+  --surface-2: #252525;
+  --border: #2c2c2e;
+  --text: #ffffff;
+  --muted: #98989d;
+  --accent: #00e5ff;
+  --accent-hover: #4defff;
+  --accent-contrast: #121212;
+  --focus-ring: #00e5ff;
+  --ok: #32d74b;
+  --bad: #ff453a;
+  --idle: #98989d;
+  --danger-bg: #3a1c1c;
   --radius-s: 8px;
-  --radius-m: 10px;
-  --radius-l: 12px;
-  --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+  --radius-m: 12px;
+  --radius-l: 16px;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --tap-min: 44px;
 }
