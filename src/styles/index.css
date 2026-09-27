@@ -197,6 +197,27 @@ tbody tr:hover {
 .spark path {
   stroke: var(--accent);
 }
+.spark-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+.spark-label {
+  fill: var(--muted);
+  font-size: 9px;
+  font-family: var(--font-mono);
+}
+.wrap-wide {
+  max-width: 1024px;
+}
+.dash-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.dash-grid h3 {
+  margin-top: 8px;
+}
 .table-scroll {
   overflow-x: auto;
 }
@@ -219,6 +240,9 @@ h3 {
 @media (max-width: 640px) {
   .wrap {
     padding: 12px;
+  }
+  .dash-grid {
+    grid-template-columns: 1fr;
   }
   .row {
     flex-direction: column;

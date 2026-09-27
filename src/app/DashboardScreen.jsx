@@ -31,7 +31,7 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
   const open = countOpen(incidents)
 
   return (
-    <div className="wrap">
+    <div className="wrap wrap-wide">
       <header>
         <h1>Pulse</h1>
         <div>
@@ -64,9 +64,20 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
           + New
         </button>
       </nav>
-      {tab === 'monitors' && (
-        <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
-      )}
+      {tab === 'monitors' &&
+        (open > 0 ? (
+          <div className="dash-grid">
+            <div>
+              <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
+            </div>
+            <aside aria-label="Open incidents">
+              <h3>Attention</h3>
+              <IncidentList incidents={incidents.filter((i) => i.status === 'OPEN')} onSelect={onSelect} />
+            </aside>
+          </div>
+        ) : (
+          <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
+        ))}
       {tab === 'incidents' && <IncidentList incidents={incidents} onSelect={onSelect} />}
       {tab === 'reports' && <ReportsView monitorUC={monitorUC} />}
       {tab === 'new' && <MonitorForm onCreate={create} />}
