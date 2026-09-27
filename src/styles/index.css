@@ -10,7 +10,7 @@ body {
   margin: 0;
 }
 .wrap {
-  max-width: 720px;
+  max-width: 880px;
   margin: 0 auto;
   padding: 16px;
 }
@@ -75,10 +75,12 @@ button.danger:hover {
 }
 nav button {
   background: var(--surface);
+  color: var(--text);
   margin: 12px 6px 12px 0;
 }
 nav button.active {
   background: var(--accent);
+  color: var(--accent-contrast);
 }
 .stats {
   display: flex;
@@ -175,6 +177,24 @@ header {
   justify-content: space-between;
   align-items: center;
 }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.topbar h1 {
+  margin: 0;
+}
 table {
   width: 100%;
   border-collapse: collapse;
@@ -207,7 +227,7 @@ tbody tr:hover {
   font-family: var(--font-mono);
 }
 .wrap-wide {
-  max-width: 1024px;
+  max-width: 1200px;
 }
 .dash-grid {
   display: grid;
@@ -253,7 +273,8 @@ h3 {
     padding: 10px;
     min-height: var(--tap-min);
   }
-  header {
+  header,
+  .topbar-inner {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;

@@ -16,7 +16,13 @@ export function Spark({ checks }) {
   const max = Math.max(...timed)
   const min = Math.min(...timed)
   return (
-    <svg width={W} height={H} className="spark" role="img" aria-label={`Response time, min ${min} ms, max ${max} ms`}>
+    <svg
+      width={W}
+      height={H}
+      className="spark"
+      role="img"
+      aria-label={`Response time, min ${min} ms, max ${max} ms`}
+    >
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.45" />
