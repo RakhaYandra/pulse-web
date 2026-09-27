@@ -3,6 +3,7 @@ import { useDashboard } from '../features/monitors/hooks.js'
 import { countOpen } from '../domain/stats.js'
 import { ago } from '../utils/formatDate.js'
 import { SummaryStats } from '../components/ui/Stats.jsx'
+import { Topbar } from '../components/ui/Topbar.jsx'
 import { MonitorList } from '../features/monitors/components/MonitorList.jsx'
 import { IncidentList } from '../features/incidents/components/IncidentList.jsx'
 import { ReportsView } from '../features/reports/components/ReportsView.jsx'
@@ -32,17 +33,7 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
 
   return (
     <>
-      <header className="topbar">
-        <div className="topbar-inner">
-          <h1>Pulse</h1>
-          <div>
-            {user.email}{' '}
-            <button className="logout" onClick={onLogout}>
-              logout
-            </button>
-          </div>
-        </div>
-      </header>
+      <Topbar email={user.email} onLogout={onLogout} />
       <div className="wrap wrap-wide">
         <SummaryStats summary={summary} />
         {open > 0 && (
@@ -98,9 +89,6 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
             )}
           </>
         )}
-        {tab === 'incidents' && <IncidentList incidents={incidents} onSelect={onSelect} />}
-        {tab === 'reports' && <ReportsView monitorUC={monitorUC} />}
-        {tab === 'new' && <MonitorForm onCreate={create} />}
         {tab === 'incidents' && <IncidentList incidents={incidents} onSelect={onSelect} />}
         {tab === 'reports' && <ReportsView monitorUC={monitorUC} />}
         {tab === 'new' && <MonitorForm onCreate={create} />}

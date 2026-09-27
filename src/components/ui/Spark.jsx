@@ -3,11 +3,12 @@ import { sparkPoints } from '../../domain/stats.js'
 
 // Area chart (WattVision Do: area fill softens peaks). Geometry from domain,
 // SVG only here. Grid + gradient only; DOWN points marked red.
+// Responsive: viewBox scales to container width.
 const W = 300
-const H = 60
+const H = 120
 
 export function Spark({ checks }) {
-  const { points, path } = sparkPoints(checks)
+  const { points, path } = sparkPoints(checks, W, H)
   const gid = useId()
   if (!points.length) return <div className="muted">no data yet</div>
   const last = points[points.length - 1]
@@ -17,9 +18,8 @@ export function Spark({ checks }) {
   const min = Math.min(...timed)
   return (
     <svg
-      width={W}
-      height={H}
-      className="spark"
+      viewBox={`0 0 ${W} ${H}`}
+      className="spark spark-fluid"
       role="img"
       aria-label={`Response time, min ${min} ms, max ${max} ms`}
     >

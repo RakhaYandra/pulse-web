@@ -41,6 +41,8 @@ function Shell() {
         id={selectedId}
         onBack={() => setSelectedId(null)}
         onChanged={() => setDashKey((k) => k + 1)}
+        user={auth.user}
+        onLogout={auth.logout}
       />
     )
   }
