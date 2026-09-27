@@ -2,7 +2,7 @@ export function SummaryStats({ summary }) {
   if (!summary) return null
   return (
     <div className="stats">
-      <div className="stat primary">
+      <div className="stat">
         <b>{Number(summary.uptime24h).toFixed(2)}%</b>
         <span>uptime 24h</span>
       </div>

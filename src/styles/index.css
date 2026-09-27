@@ -109,13 +109,10 @@ nav button.active {
   min-width: 140px;
 }
 .stat b {
-  font-size: 22px;
-  font-variant-numeric: tabular-nums;
-}
-.stat.primary b {
+  font-size: 32px;
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 32px;
+  font-variant-numeric: tabular-nums;
 }
 .stat.alert {
   border: 1px solid var(--bad);
@@ -195,6 +192,7 @@ header {
   z-index: 10;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
+  display: block;
 }
 .topbar-inner {
   margin: 0;
@@ -243,12 +241,24 @@ tbody tr:hover {
 .dash-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 16px;
+  gap: 0 16px;
   align-items: start;
 }
-.dash-grid h3 {
+.dash-grid > nav {
+  grid-column: 1;
+  grid-row: 1;
+}
+.dash-grid > .tab-body {
+  grid-column: 1;
+}
+.dash-grid > aside {
+  grid-column: 2;
+}
+.attention-title {
+  grid-column: 2;
+  grid-row: 1;
   margin: 12px 0;
-  line-height: 38px;
+  line-height: 33px;
 }
 .table-scroll {
   overflow-x: auto;

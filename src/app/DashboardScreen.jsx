@@ -53,34 +53,54 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
             . Attention needed. View details.
           </button>
         )}
-        <nav>
-          <button className={tab === 'monitors' ? 'active' : ''} onClick={() => setTab('monitors')}>
-            Monitors
-          </button>
-          <button className={tab === 'incidents' ? 'active' : ''} onClick={() => setTab('incidents')}>
-            Incidents ({open})
-          </button>
-          <button className={tab === 'reports' ? 'active' : ''} onClick={() => setTab('reports')}>
-            Reports
-          </button>
-          <button className={tab === 'new' ? 'active' : ''} onClick={() => setTab('new')}>
-            + New
-          </button>
-        </nav>
-        {tab === 'monitors' &&
-          (open > 0 ? (
-            <div className="dash-grid">
-              <div>
-                <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
-              </div>
-              <aside aria-label="Open incidents">
-                <h3>Attention</h3>
-                <IncidentList incidents={incidents.filter((i) => i.status === 'OPEN')} onSelect={onSelect} />
-              </aside>
+        {tab === 'monitors' && open > 0 ? (
+          <div className="dash-grid">
+            <nav>
+              <button className={tab === 'monitors' ? 'active' : ''} onClick={() => setTab('monitors')}>
+                Monitors
+              </button>
+              <button className={tab === 'incidents' ? 'active' : ''} onClick={() => setTab('incidents')}>
+                Incidents ({open})
+              </button>
+              <button className={tab === 'reports' ? 'active' : ''} onClick={() => setTab('reports')}>
+                Reports
+              </button>
+              <button className={tab === 'new' ? 'active' : ''} onClick={() => setTab('new')}>
+                + New
+              </button>
+            </nav>
+            <h3 className="attention-title">Attention</h3>
+            <div className="tab-body">
+              <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
             </div>
-          ) : (
-            <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
-          ))}
+            <aside aria-label="Open incidents">
+              <IncidentList incidents={incidents.filter((i) => i.status === 'OPEN')} onSelect={onSelect} />
+            </aside>
+          </div>
+        ) : (
+          <>
+            <nav>
+              <button className={tab === 'monitors' ? 'active' : ''} onClick={() => setTab('monitors')}>
+                Monitors
+              </button>
+              <button className={tab === 'incidents' ? 'active' : ''} onClick={() => setTab('incidents')}>
+                Incidents ({open})
+              </button>
+              <button className={tab === 'reports' ? 'active' : ''} onClick={() => setTab('reports')}>
+                Reports
+              </button>
+              <button className={tab === 'new' ? 'active' : ''} onClick={() => setTab('new')}>
+                + New
+              </button>
+            </nav>
+            {tab === 'monitors' && (
+              <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
+            )}
+          </>
+        )}
+        {tab === 'incidents' && <IncidentList incidents={incidents} onSelect={onSelect} />}
+        {tab === 'reports' && <ReportsView monitorUC={monitorUC} />}
+        {tab === 'new' && <MonitorForm onCreate={create} />}
         {tab === 'incidents' && <IncidentList incidents={incidents} onSelect={onSelect} />}
         {tab === 'reports' && <ReportsView monitorUC={monitorUC} />}
         {tab === 'new' && <MonitorForm onCreate={create} />}
