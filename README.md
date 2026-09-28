@@ -40,13 +40,19 @@ then serves it via nginx.
 ## Test
 
 ```bash
-npx vitest run          # 18 unit tests (domain + use-cases, fake gateways)
-npm test --prefix e2e   # 7 Playwright tests, black-box (needs API + web up)
-BASE_URL=http://other:5173 npm test --prefix e2e   # against another frontend
+npx vitest run          # 24 unit tests (domain + use-cases + hooks, fake gateways)
+```
+
+E2E lives in [`pulse-qa`](https://github.com/RakhaYandra/pulse-qa) (7 Playwright
+tests, black-box, needs API + web up):
+
+```bash
+cd ../pulse-qa/e2e && npm install
+BASE_URL=http://localhost:5173 npx playwright test
 ```
 
 E2E registers throwaway users and drives the real UI; the API contract it
-relies on is owned by the backend repo (`qa/collection.json`, Newman 20/20).
+relies on lives in [`pulse-qa/collection.json`](https://github.com/RakhaYandra/pulse-qa/blob/main/collection.json) (Newman 22/22).
 
 ## Architecture
 
