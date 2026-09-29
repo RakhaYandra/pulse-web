@@ -62,11 +62,7 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, on
         <div className="muted">
           {m.url} · every {m.intervalSeconds}s · timeout {m.timeoutSeconds}s
         </div>
-        <DetailStats
-          uptime={uptime == null ? 'n/a' : uptime.toFixed(2)}
-          avg={avg == null ? 'n/a' : avg}
-          status={m.status}
-        />
+        <DetailStats uptime={uptime == null ? null : uptime.toFixed(2)} avg={avg} status={m.status} />
         <h3>Response time, last 20 checks</h3>
         <Spark checks={checks} />
         <h3>Recent checks</h3>

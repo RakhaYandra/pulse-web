@@ -8,6 +8,8 @@ export function useDashboard(monitorUC) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
+  const [actionError, setActionError] = useState('')
+  const [pendingId, setPendingId] = useState(null)
   const [updatedAt, setUpdatedAt] = useState(null)
 
   async function reload() {
@@ -42,13 +44,29 @@ export function useDashboard(monitorUC) {
   }
 
   async function toggle(monitor) {
-    await monitorUC.togglePause(monitor)
-    await reload()
+    setActionError('')
+    setPendingId(monitor.id)
+    try {
+      await monitorUC.togglePause(monitor)
+      await reload()
+    } catch (ex) {
+      setActionError(ex.message || 'Failed to update monitor.')
+    } finally {
+      setPendingId(null)
+    }
   }
 
   async function remove(id) {
-    await monitorUC.removeMonitor(id)
-    await reload()
+    setActionError('')
+    setPendingId(id)
+    try {
+      await monitorUC.removeMonitor(id)
+      await reload()
+    } catch (ex) {
+      setActionError(ex.message || 'Failed to delete monitor.')
+    } finally {
+      setPendingId(null)
+    }
   }
 
   return {
@@ -58,6 +76,8 @@ export function useDashboard(monitorUC) {
     error,
     loading,
     loadError,
+    actionError,
+    pendingId,
     updatedAt,
     reload,
     create,

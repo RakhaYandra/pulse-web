@@ -27,18 +27,19 @@ export function SummaryStats({ summary }) {
 }
 
 export function DetailStats({ uptime, avg, status }) {
+  const pending = status === 'UNKNOWN'
   return (
     <div className="stats">
       <div className="stat">
-        <b>{uptime}%</b>
+        <b>{uptime == null ? 'n/a' : `${uptime}%`}</b>
         <span>uptime</span>
       </div>
       <div className="stat">
-        <b className="mono">{avg} ms</b>
+        <b className="mono">{avg == null ? 'n/a' : `${avg} ms`}</b>
         <span>avg response</span>
       </div>
       <div className="stat">
-        <b>{status}</b>
+        <b className={pending ? 'muted' : ''}>{pending ? 'waiting for first check' : status}</b>
         <span>status</span>
       </div>
     </div>

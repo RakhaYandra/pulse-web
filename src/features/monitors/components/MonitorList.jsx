@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import { Dot } from '../../../components/ui/Dot.jsx'
 import { sortMonitors } from '../../../domain/stats.js'
 
-export function MonitorList({ monitors, onSelect, onToggle, onRemove }) {
+export function MonitorList({ monitors, pendingId, onSelect, onToggle, onRemove }) {
+  const [confirmId, setConfirmId] = useState(null)
   if (!monitors.length) return <div className="muted">No monitors yet. Open + New to create one.</div>
-  return sortMonitors(monitors).map((m) => (
+  return sortMonitors(monitors).map((m) => {
+    return (
     <div
       key={m.id}
       className={m.status === 'DOWN' ? 'row attention' : 'row'}
@@ -27,19 +30,31 @@ export function MonitorList({ monitors, onSelect, onToggle, onRemove }) {
       </div>
       <div onClick={(e) => e.stopPropagation()}>
         {m.isActive ? (
-          <button onClick={() => onToggle(m)}>Pause</button>
+          <button disabled={pendingId === m.id} onClick={() => onToggle(m)}>
+            {pendingId === m.id ? 'Pausing…' : 'Pause'}
+          </button>
         ) : (
-          <button onClick={() => onToggle(m)}>Resume</button>
+          <button disabled={pendingId === m.id} onClick={() => onToggle(m)}>
+            {pendingId === m.id ? 'Resuming…' : 'Resume'}
+          </button>
         )}
-        <button
-          className="danger"
-          onClick={() => {
-            if (confirm('Delete?')) onRemove(m.id)
-          }}
-        >
-          Delete
-        </button>
+        {confirmId === m.id ? (
+          <button
+            className="danger"
+            disabled={pendingId === m.id}
+            onClick={() => {
+              setConfirmId(null)
+              onRemove(m.id)
+            }}
+          >
+            Confirm delete
+          </button>
+        ) : (
+          <button className="danger" disabled={pendingId === m.id} onClick={() => setConfirmId(m.id)}>
+            Delete
+          </button>
+        )}
       </div>
     </div>
-  ))
-}
+    )
+  })}

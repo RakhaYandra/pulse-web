@@ -10,7 +10,7 @@ import { ReportsView } from '../features/reports/components/ReportsView.jsx'
 import { MonitorForm } from '../features/monitors/components/MonitorForm.jsx'
 
 export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
-  const { summary, monitors, incidents, loading, loadError, updatedAt, reload, create, toggle, remove } =
+  const { summary, monitors, incidents, loading, loadError, actionError, pendingId, updatedAt, reload, create, toggle, remove } =
     useDashboard(monitorUC)
   const [tab, setTab] = useState('monitors')
 
@@ -36,6 +36,11 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
       <Topbar email={user.email} onLogout={onLogout} />
       <div className="wrap wrap-wide">
         <SummaryStats summary={summary} />
+        {actionError && (
+          <div className="error" role="alert">
+            {actionError}
+          </div>
+        )}
         {open > 0 && (
           <button className="banner" onClick={() => setTab('incidents')}>
             <strong>
@@ -62,7 +67,7 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
             </nav>
             <h3 className="attention-title">Attention</h3>
             <div className="tab-body">
-              <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
+              <MonitorList monitors={monitors} pendingId={pendingId} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
             </div>
             <aside aria-label="Open incidents">
               <IncidentList incidents={incidents.filter((i) => i.status === 'OPEN')} onSelect={onSelect} />
@@ -85,7 +90,7 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
               </button>
             </nav>
             {tab === 'monitors' && (
-              <MonitorList monitors={monitors} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
+              <MonitorList monitors={monitors} pendingId={pendingId} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
             )}
           </>
         )}

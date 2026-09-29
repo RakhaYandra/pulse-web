@@ -32,7 +32,7 @@ function Shell() {
 
   if (auth.checking) return <div className="wrap muted">loading…</div>
   if (!auth.user) {
-    return <LoginForm onLogin={auth.login} onRegister={auth.register} error={auth.error} />
+    return <LoginForm onLogin={auth.login} onRegister={auth.register} error={auth.error} busy={auth.busy} />
   }
   if (selectedId) {
     return (
