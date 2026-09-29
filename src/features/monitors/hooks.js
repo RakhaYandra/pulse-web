@@ -8,6 +8,7 @@ export function useDashboard(monitorUC) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
+  const [stale, setStale] = useState('')
   const [actionError, setActionError] = useState('')
   const [pendingId, setPendingId] = useState(null)
   const [updatedAt, setUpdatedAt] = useState(null)
@@ -20,6 +21,7 @@ export function useDashboard(monitorUC) {
       setIncidents(d.incidents)
       setUpdatedAt(Date.now())
       setLoadError('')
+      setStale('')
     } catch (ex) {
       if (summary === null) setLoadError(ex.message || 'Failed to load dashboard.')
     } finally {
@@ -29,6 +31,7 @@ export function useDashboard(monitorUC) {
 
   usePolling(reload, 15000, [], (ex) => {
     if (summary === null) setLoadError(ex.message || 'Failed to load dashboard.')
+    else setStale(ex.message || 'Update failed.')
   })
 
   async function create(raw) {
@@ -76,6 +79,7 @@ export function useDashboard(monitorUC) {
     error,
     loading,
     loadError,
+    stale,
     actionError,
     pendingId,
     updatedAt,
@@ -91,6 +95,7 @@ export function useMonitorDetail(monitorUC, id) {
   const [incidents, setIncidents] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
+  const [stale, setStale] = useState('')
 
   async function reload() {
     try {
@@ -99,6 +104,7 @@ export function useMonitorDetail(monitorUC, id) {
       setChecks(d.checks)
       setIncidents(d.incidents)
       setLoadError('')
+      setStale('')
     } catch (ex) {
       if (monitor === null) setLoadError(ex.message || 'Failed to load monitor.')
     } finally {
@@ -108,7 +114,8 @@ export function useMonitorDetail(monitorUC, id) {
 
   usePolling(reload, 15000, [id], (ex) => {
     if (monitor === null) setLoadError(ex.message || 'Failed to load monitor.')
+    else setStale(ex.message || 'Update failed.')
   })
 
-  return { monitor, checks, incidents, loading, loadError, reload }
+  return { monitor, checks, incidents, loading, loadError, stale, reload }
 }

@@ -7,7 +7,7 @@ import { DetailStats } from '../../../components/ui/Stats.jsx'
 import { Topbar } from '../../../components/ui/Topbar.jsx'
 
 export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, onLogout }) {
-  const { monitor: m, checks, incidents, loading, loadError, reload } = useMonitorDetail(monitorUC, id)
+  const { monitor: m, checks, incidents, loading, loadError, stale, reload } = useMonitorDetail(monitorUC, id)
 
   if (loading)
     return (
@@ -59,6 +59,11 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, on
         <h2>
           {m.name} <Dot status={m.status} />
         </h2>
+        {stale && (
+          <div className="error" role="status">
+            Live update failed ({stale}). Data may be stale.
+          </div>
+        )}
         <div className="muted">
           {m.url} · every {m.intervalSeconds}s · timeout {m.timeoutSeconds}s
         </div>

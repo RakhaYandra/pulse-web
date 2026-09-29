@@ -1,24 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { usePolling } from '../../../hooks/usePolling.js'
 import { ReliabilityTable } from './ReliabilityTable.jsx'
 
 export function ReportsView({ monitorUC }) {
   const [rows, setRows] = useState(null)
   const [error, setError] = useState('')
-  useEffect(() => {
-    let cancelled = false
-    monitorUC.loadReliability(30).then(
-      (r) => {
-        if (!cancelled) setRows(r)
-      },
-      (ex) => {
-        if (!cancelled) setError(ex.message || 'Failed to load report.')
-      },
+
+  async function reload() {
+    const r = await monitorUC.loadReliability(30)
+    setRows(r)
+    setError('')
+  }
+
+  usePolling(reload, 60000, [monitorUC], (ex) => {
+    if (rows === null) setError(ex.message || 'Failed to load report.')
+  })
+
+  if (error) {
+    return (
+      <div>
+        <p className="error" role="alert">{error}</p>
+        <button onClick={() => { setError(''); reload().catch((ex) => setError(ex.message)) }}>Retry</button>
+      </div>
     )
-    return () => {
-      cancelled = true
-    }
-  }, [monitorUC])
-  if (error) return <p className="error">{error}</p>
+  }
   if (rows === null) return <p className="muted">Loading report…</p>
   return (
     <div>

@@ -10,25 +10,17 @@ export function MonitorList({ monitors, pendingId, onSelect, onToggle, onRemove 
     <div
       key={m.id}
       className={m.status === 'DOWN' ? 'row attention' : 'row'}
-      role="button"
-      tabIndex={0}
-      aria-label={`Open ${m.name}`}
-      onClick={() => onSelect(m.id)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onSelect(m.id)
-        }
-      }}
     >
       <div>
-        <b>{m.name}</b> <Dot status={m.status} />
+        <button className="row-open" onClick={() => onSelect(m.id)} aria-label={`Open ${m.name}`}>
+          <b>{m.name}</b> <Dot status={m.isActive ? m.status : 'PAUSED'} />
+        </button>
         <br />
         <span className="muted">
           {m.url} · every {m.intervalSeconds}s{m.isActive ? '' : ' · PAUSED'}
         </span>
       </div>
-      <div onClick={(e) => e.stopPropagation()}>
+      <div>
         {m.isActive ? (
           <button disabled={pendingId === m.id} onClick={() => onToggle(m)}>
             {pendingId === m.id ? 'Pausing…' : 'Pause'}
