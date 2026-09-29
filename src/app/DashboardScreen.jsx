@@ -118,12 +118,7 @@ export function DashboardScreen({ user, monitorUC, onLogout, theme, onToggleThem
             {tabs}
             <h3 className="attention-title">Attention</h3>
             <div className="tab-body">
-              <MonitorList
-                monitors={monitors}
-                pendingId={pendingId}
-                onToggle={toggle}
-                onRemove={remove}
-              />
+              <MonitorList monitors={monitors} pendingId={pendingId} onToggle={toggle} onRemove={remove} />
             </div>
             <aside aria-label="Open incidents">
               <IncidentList incidents={incidents.filter((i) => i.status === 'OPEN')} />
@@ -133,12 +128,7 @@ export function DashboardScreen({ user, monitorUC, onLogout, theme, onToggleThem
           <>
             {tabs}
             {tab === 'monitors' && (
-              <MonitorList
-                monitors={monitors}
-                pendingId={pendingId}
-                onToggle={toggle}
-                onRemove={remove}
-              />
+              <MonitorList monitors={monitors} pendingId={pendingId} onToggle={toggle} onRemove={remove} />
             )}
           </>
         )}

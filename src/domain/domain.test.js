@@ -109,3 +109,15 @@ describe('latencyStats', () => {
     expect(latencyStats(checks)).toEqual({ p50: 60, p95: 100, count: 10 })
   })
 })
+
+describe('paginate', () => {
+  it('slices pages and clamps out-of-range', async () => {
+    const { paginate } = await import('./paginate.js')
+    const items = Array.from({ length: 45 }, (_, i) => i)
+    expect(paginate(items, 1, 20)).toEqual({ rows: items.slice(0, 20), current: 1, pages: 3, total: 45 })
+    expect(paginate(items, 3, 20).rows).toEqual(items.slice(40))
+    expect(paginate(items, 99, 20).current).toBe(3)
+    expect(paginate(items, 0, 20).current).toBe(1)
+    expect(paginate([], 1, 20)).toEqual({ rows: [], current: 1, pages: 1, total: 0 })
+  })
+})
