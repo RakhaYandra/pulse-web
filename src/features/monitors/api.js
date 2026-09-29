@@ -57,6 +57,7 @@ function toWire(input) {
 export function createMonitorApi(http) {
   return {
     monitors: async () => (await http.get('/api/v1/monitors')).map(mapMonitor),
+    monitor: async (id) => mapMonitor(await http.get(`/api/v1/monitors/${id}`)),
     createMonitor: async (input) => mapMonitor(await http.post('/api/v1/monitors', toWire(input))),
     async setActive(id, active) {
       return mapMonitor(await http.post(`/api/v1/monitors/${id}/${active ? 'resume' : 'pause'}`))

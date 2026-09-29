@@ -27,6 +27,7 @@ function fakeGateways() {
   const monitorGateway = {
     summary: vi.fn(async () => ({ totalMonitors: 2 })),
     monitors: vi.fn(async () => monitors),
+    monitor: vi.fn(async (id) => monitors.find((m) => m.id === id) ?? null),
     incidents: vi.fn(async () => [{ status: 'OPEN' }]),
     createMonitor: vi.fn(async (input) => {
       calls.push(input)
@@ -61,11 +62,13 @@ describe('monitor use-cases', () => {
     expect(monitorGateway.setActive).toHaveBeenCalledWith('m1', false)
     expect(out.isActive).toBe(false)
   })
-  it('loadMonitorDetail picks monitor by id', async () => {
+  it('loadMonitorDetail fetches the single monitor', async () => {
     const { monitorGateway } = fakeGateways()
     const uc = createMonitorUseCases({ monitorGateway })
     const d = await uc.loadMonitorDetail('m2')
     expect(d.monitor.name).toBe('Two')
     expect(d.checks).toHaveLength(1)
+    expect(monitorGateway.monitor).toHaveBeenCalledWith('m2')
+    expect(monitorGateway.monitors).not.toHaveBeenCalled()
   })
 })

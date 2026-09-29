@@ -14,14 +14,10 @@ export function createMonitorUseCases({ monitorGateway }) {
     removeMonitor: (id) => monitorGateway.removeMonitor(id),
     loadMonitorDetail: (id) =>
       Promise.all([
-        monitorGateway.monitors(),
+        monitorGateway.monitor(id).catch(() => null),
         monitorGateway.checks(id),
         monitorGateway.monitorIncidents(id),
-      ]).then(([monitors, checks, incidents]) => ({
-        monitor: monitors.find((m) => m.id === id) ?? null,
-        checks,
-        incidents,
-      })),
+      ]).then(([monitor, checks, incidents]) => ({ monitor, checks, incidents })),
     loadReliability: (days = 30) => monitorGateway.reliability(days),
   }
 }
