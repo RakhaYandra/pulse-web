@@ -40,10 +40,10 @@ then serves it via nginx.
 ## Test
 
 ```bash
-npx vitest run          # 24 unit tests (domain + use-cases + hooks, fake gateways)
+npx vitest run          # 26 unit tests (domain + use-cases + hooks, fake gateways)
 ```
 
-E2E lives in [`pulse-qa`](https://github.com/RakhaYandra/pulse-qa) (7 Playwright
+E2E lives in [`pulse-qa`](https://github.com/RakhaYandra/pulse-qa) (8 Playwright
 tests, black-box, needs API + web up):
 
 ```bash
@@ -53,6 +53,20 @@ BASE_URL=http://localhost:5173 npx playwright test
 
 E2E registers throwaway users and drives the real UI; the API contract it
 relies on lives in [`pulse-qa/collection.json`](https://github.com/RakhaYandra/pulse-qa/blob/main/collection.json) (Newman 22/22).
+
+## Tooling (lint + format, side-by-side by design)
+
+| Role | Lint | Format |
+|---|---|---|
+| Daily fast gate | `npm run lint:ox` (oxlint, ~0.05s) | `npm run format:oxcheck` (oxfmt, ~0.05s) |
+| Compatibility backstop | `npm run lint` (ESLint, ~0.9s) | `npm run format:check` (Prettier, ~0.5s) |
+
+Measured on this repo (2026-09-29): oxlint 0.054s vs ESLint 0.925s
+(~17x); oxfmt 0.003s vs Prettier 0.527s (~175x), zero format diff between
+them. oxlint config (`.oxlintrc.json`) covers the 4 ESLint rules except
+`react/jsx-uses-vars`, which oxlint handles natively (no such rule); it also
+caught one real issue ESLint missed (`unicorn/no-useless-fallback-in-spread`
+in `httpClient.js`, fixed).
 
 ## Architecture
 

@@ -3,7 +3,7 @@
 
 export function createHttpClient({ baseUrl, getToken }) {
   async function req(path, opts = {}) {
-    const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) }
+    const headers = { 'Content-Type': 'application/json', ...opts.headers }
     const token = getToken()
     if (token) headers.Authorization = 'Bearer ' + token
     const res = await fetch(baseUrl + path, { ...opts, headers })
