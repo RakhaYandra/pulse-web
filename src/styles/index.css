@@ -18,6 +18,9 @@
   white-space: nowrap;
   border: 0;
 }
+:root[data-theme='light'] {
+  color-scheme: light;
+}
 nav {
   overflow-x: auto;
   white-space: nowrap;
@@ -190,7 +193,7 @@ td {
   padding: 6px 10px;
   font-size: 13px;
   background: var(--surface-2);
-  color: #ffffff;
+  color: var(--text);
 }
 .dot-up {
   color: var(--ok);

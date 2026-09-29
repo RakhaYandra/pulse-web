@@ -9,7 +9,7 @@ import { IncidentList } from '../features/incidents/components/IncidentList.jsx'
 import { ReportsView } from '../features/reports/components/ReportsView.jsx'
 import { MonitorForm } from '../features/monitors/components/MonitorForm.jsx'
 
-export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
+export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, onToggleTheme }) {
   const { summary, monitors, incidents, loading, loadError, stale, actionError, pendingId, updatedAt, reload, create, toggle, remove } =
     useDashboard(monitorUC)
   const [tab, setTab] = useState('monitors')
@@ -56,7 +56,7 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect }) {
 
   return (
     <>
-      <Topbar email={user.email} onLogout={onLogout} />
+      <Topbar email={user.email} onLogout={onLogout} theme={theme} onToggleTheme={onToggleTheme} />
       <div className="wrap wrap-wide">
         <SummaryStats summary={summary} />
         {stale && (

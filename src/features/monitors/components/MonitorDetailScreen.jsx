@@ -6,13 +6,13 @@ import { Spark } from '../../../components/ui/Spark.jsx'
 import { DetailStats } from '../../../components/ui/Stats.jsx'
 import { Topbar } from '../../../components/ui/Topbar.jsx'
 
-export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, onLogout }) {
+export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, onLogout, theme, onToggleTheme }) {
   const { monitor: m, checks, incidents, loading, loadError, stale, reload } = useMonitorDetail(monitorUC, id)
 
   if (loading)
     return (
       <>
-        <Topbar email={user.email} onLogout={onLogout} />
+        <Topbar email={user.email} onLogout={onLogout} theme={theme} onToggleTheme={onToggleTheme} />
         <div className="wrap wrap-wide">
           <p className="muted">Loading monitor…</p>
         </div>
@@ -21,7 +21,7 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, on
   if (loadError) {
     return (
       <>
-        <Topbar email={user.email} onLogout={onLogout} />
+        <Topbar email={user.email} onLogout={onLogout} theme={theme} onToggleTheme={onToggleTheme} />
         <div className="wrap wrap-wide">
           <p className="error">{loadError}</p>
           <button onClick={reload}>Retry</button> <button onClick={onBack}>← Back</button>
@@ -33,7 +33,7 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, on
   if (!m)
     return (
       <>
-        <Topbar email={user.email} onLogout={onLogout} />
+        <Topbar email={user.email} onLogout={onLogout} theme={theme} onToggleTheme={onToggleTheme} />
         <div className="wrap wrap-wide">
           <p className="muted">Monitor not found. It may have been deleted.</p>
           <button onClick={onBack}>← Back</button>
@@ -46,7 +46,7 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, on
 
   return (
     <>
-      <Topbar email={user.email} onLogout={onLogout} />
+      <Topbar email={user.email} onLogout={onLogout} theme={theme} onToggleTheme={onToggleTheme} />
       <div className="wrap wrap-wide">
         <button
           onClick={() => {

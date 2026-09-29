@@ -27,3 +27,24 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --tap-min: 44px;
 }
+
+/* Light theme: same token names, values re-verified with contrast-check.py
+   (text ratio key: muted 5.50, accent-text 5.06/4.64, ok 5.08, bad 4.83). */
+[data-theme='light'] {
+  --bg: #ffffff;
+  --surface: #f4f5f7;
+  --surface-2: #e8ebf0;
+  --border: #dfe3ea;
+  --text: #16181d;
+  --muted: #5b6470;
+  --accent: #007a8a;
+  --accent-hover: #006b78;
+  --accent-contrast: #ffffff;
+  --focus-ring: #007a8a;
+  --ok: #1a7f37;
+  --bad: #d92d20;
+  --idle: #6b7280;
+  --danger-bg: #fdecec;
+  --danger-solid: #d92d20;
+  --danger-solid-hover: #b42318;
+}
