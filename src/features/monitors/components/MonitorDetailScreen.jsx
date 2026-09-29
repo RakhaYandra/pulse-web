@@ -1,3 +1,4 @@
+import { useNavigate, useParams } from 'react-router'
 import { useMonitorDetail } from '../hooks.js'
 import {
   uptimePct,
@@ -12,16 +13,14 @@ import { Spark } from '../../../components/ui/Spark.jsx'
 import { DetailStats } from '../../../components/ui/Stats.jsx'
 import { Topbar } from '../../../components/ui/Topbar.jsx'
 
-export function MonitorDetailScreen({
-  monitorUC,
-  id,
-  onBack,
-  onChanged,
-  user,
-  onLogout,
-  theme,
-  onToggleTheme,
-}) {
+export function MonitorDetailScreen({ monitorUC, user, onLogout, theme, onToggleTheme }) {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  // Direct loads have no in-app history: fall back to the dashboard.
+  const onBack = () => {
+    if (window.history.length > 1) navigate(-1)
+    else navigate('/')
+  }
   const { monitor: m, checks, incidents, loading, loadError, stale, reload } = useMonitorDetail(monitorUC, id)
 
   if (loading)
@@ -64,13 +63,7 @@ export function MonitorDetailScreen({
     <>
       <Topbar email={user.email} onLogout={onLogout} theme={theme} onToggleTheme={onToggleTheme} />
       <div className="wrap wrap-wide">
-        <button
-          className="secondary"
-          onClick={() => {
-            onBack()
-            onChanged?.()
-          }}
-        >
+        <button className="secondary" onClick={onBack}>
           ← Back
         </button>
         <h2>

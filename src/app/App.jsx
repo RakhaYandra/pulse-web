@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 import { createHttpClient } from '../lib/httpClient.js'
 import { createLocalTokenStore } from '../lib/tokenStore.js'
 import { createAuthApi } from '../features/auth/api.js'
@@ -21,8 +22,6 @@ const monitorUC = createMonitorUseCases({ monitorGateway: createMonitorApi(http)
 
 function Shell() {
   const auth = useAuth(authUC)
-  const [selectedId, setSelectedId] = useState(null)
-  const [dashKey, setDashKey] = useState(0)
   const [theme, setTheme] = useState(() => {
     try {
       const stored = localStorage.getItem('pulse_theme')
@@ -40,9 +39,7 @@ function Shell() {
     } catch {
       /* private mode: theme just won't persist */
     }
-    document
-      .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', theme === 'light' ? '#ffffff' : '#121212')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'light' ? '#ffffff' : '#121212')
   }, [theme])
 
   const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
@@ -57,33 +54,20 @@ function Shell() {
   if (!auth.user) {
     return <LoginForm onLogin={auth.login} onRegister={auth.register} error={auth.error} busy={auth.busy} />
   }
-  if (selectedId) {
-    return (
-      <MonitorDetailScreen
-        monitorUC={monitorUC}
-        id={selectedId}
-        onBack={() => setSelectedId(null)}
-        onChanged={() => setDashKey((k) => k + 1)}
-        user={auth.user}
-        onLogout={auth.logout}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
-    )
-  }
+  const chrome = { user: auth.user, onLogout: auth.logout, theme, onToggleTheme: toggleTheme }
   return (
-    <DashboardScreen
-      key={dashKey}
-      user={auth.user}
-      monitorUC={monitorUC}
-      onLogout={auth.logout}
-      onSelect={setSelectedId}
-      theme={theme}
-      onToggleTheme={toggleTheme}
-    />
+    <Routes>
+      <Route path="/" element={<DashboardScreen monitorUC={monitorUC} {...chrome} />} />
+      <Route path="/monitors/:id" element={<MonitorDetailScreen monitorUC={monitorUC} {...chrome} />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
 
 export default function App() {
-  return <Shell />
+  return (
+    <BrowserRouter>
+      <Shell />
+    </BrowserRouter>
+  )
 }

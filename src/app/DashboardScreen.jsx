@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router'
 import { useDashboard } from '../features/monitors/hooks.js'
 import { countOpen, incidentDuration } from '../domain/stats.js'
 import { ago } from '../utils/formatDate.js'
@@ -10,7 +11,7 @@ import { IncidentList } from '../features/incidents/components/IncidentList.jsx'
 import { ReportsView } from '../features/reports/components/ReportsView.jsx'
 import { MonitorForm } from '../features/monitors/components/MonitorForm.jsx'
 
-export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, onToggleTheme }) {
+export function DashboardScreen({ user, monitorUC, onLogout, theme, onToggleTheme }) {
   const {
     summary,
     monitors,
@@ -27,7 +28,11 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, on
     toggle,
     remove,
   } = useDashboard(monitorUC)
-  const [tab, setTab] = useState('monitors')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const tab = searchParams.get('tab') || 'monitors'
+  const setTab = (t) => setSearchParams(t === 'monitors' ? {} : { tab: t })
+  const onSelect = (id) => navigate(`/monitors/${id}`)
   // Tick so "Updated Ns ago" stays honest between 15s polls.
   const [, setNow] = useState(0)
   useEffect(() => {
@@ -116,13 +121,12 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, on
               <MonitorList
                 monitors={monitors}
                 pendingId={pendingId}
-                onSelect={onSelect}
                 onToggle={toggle}
                 onRemove={remove}
               />
             </div>
             <aside aria-label="Open incidents">
-              <IncidentList incidents={incidents.filter((i) => i.status === 'OPEN')} onSelect={onSelect} />
+              <IncidentList incidents={incidents.filter((i) => i.status === 'OPEN')} />
             </aside>
           </div>
         ) : (
@@ -132,14 +136,13 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, on
               <MonitorList
                 monitors={monitors}
                 pendingId={pendingId}
-                onSelect={onSelect}
                 onToggle={toggle}
                 onRemove={remove}
               />
             )}
           </>
         )}
-        {tab === 'incidents' && <IncidentList incidents={incidents} onSelect={onSelect} />}
+        {tab === 'incidents' && <IncidentList incidents={incidents} />}
         {tab === 'reports' && <ReportsView monitorUC={monitorUC} />}
         {tab === 'new' && <MonitorForm onCreate={create} />}
         <p className="muted freshness">

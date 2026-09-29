@@ -1,9 +1,10 @@
 import { useState } from 'react'
+import { Link } from 'react-router'
 import { Dot } from '../../../components/ui/Dot.jsx'
 import { PulseMark } from '../../../components/ui/PulseMark.jsx'
 import { sortMonitors } from '../../../domain/stats.js'
 
-export function MonitorList({ monitors, pendingId, onSelect, onToggle, onRemove }) {
+export function MonitorList({ monitors, pendingId, onToggle, onRemove }) {
   const [confirmId, setConfirmId] = useState(null)
   if (!monitors.length)
     return (
@@ -17,11 +18,11 @@ export function MonitorList({ monitors, pendingId, onSelect, onToggle, onRemove 
   return sortMonitors(monitors).map((m) => {
     return (
       <div key={m.id} className={m.status === 'DOWN' ? 'row attention' : 'row'}>
-        <div>
-          <button className="row-open" onClick={() => onSelect(m.id)} aria-label={`Open ${m.name}`}>
-            <b>{m.name}</b> <Dot status={m.isActive ? m.status : 'PAUSED'} />
-          </button>
-          <br />
+      <div>
+        <Link className="row-open" to={`/monitors/${m.id}`} aria-label={`Open ${m.name}`}>
+          <b>{m.name}</b> <Dot status={m.isActive ? m.status : 'PAUSED'} />
+        </Link>
+        <br />
           <span className="muted">
             {m.url}, every {m.intervalSeconds}s{m.isActive ? '' : ', PAUSED'}
           </span>
