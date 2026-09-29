@@ -1,5 +1,5 @@
 // Monitor use-cases (dashboard, detail, reports). Pure orchestration over
-// the injected monitor gateway — no React, no fetch, no localStorage.
+// the injected monitor gateway , no React, no fetch, no localStorage.
 
 import { normalizeMonitorInput } from '../../domain/entities.js'
 

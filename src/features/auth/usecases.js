@@ -1,4 +1,4 @@
-// Auth use-cases. Pure orchestration over injected ports —
+// Auth use-cases. Pure orchestration over injected ports ,
 // no React, no fetch, no localStorage.
 
 export function createAuthUseCases({ authGateway, tokenStore }) {

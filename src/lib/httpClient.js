@@ -1,4 +1,4 @@
-// Raw transport. Knows fetch, base URL, and token injection — nothing about
+// Raw transport. Knows fetch, base URL, and token injection , nothing about
 // domain shapes (returns parsed `data` verbatim for the gateway to map).
 
 export function createHttpClient({ baseUrl, getToken }) {

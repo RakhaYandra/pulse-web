@@ -1,4 +1,5 @@
 import { PulseMark } from './PulseMark.jsx'
+import { ThemeToggle } from './ThemeToggle.jsx'
 
 export function Topbar({ email, onLogout, theme, onToggleTheme }) {
   return (
@@ -12,15 +13,7 @@ export function Topbar({ email, onLogout, theme, onToggleTheme }) {
         </h1>
         <div className="topbar-user">
           <span className="topbar-email">{email}</span>{' '}
-          {theme && (
-            <button
-              className="link"
-              onClick={onToggleTheme}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {theme === 'dark' ? 'Light' : 'Dark'}
-            </button>
-          )}
+          {theme && <ThemeToggle theme={theme} onToggle={onToggleTheme} />}
           <button className="logout" onClick={onLogout}>
             logout
           </button>

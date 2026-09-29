@@ -84,8 +84,7 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, on
                 if (!first) return null
                 return (
                   <span>
-                    {' '}
-                    — {first.monitorName} down for {incidentDuration(first.startedAt, first.resolvedAt)}.{' '}
+                    : {first.monitorName} down for {incidentDuration(first.startedAt, first.resolvedAt)}.{' '}
                     <button className="link" onClick={() => onSelect(first.monitorId)}>
                       Open monitor
                     </button>

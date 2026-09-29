@@ -52,6 +52,27 @@ nav {
   color: var(--muted);
   font-size: 13px;
 }
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  margin-right: 8px;
+  background: var(--surface-2);
+  color: var(--text);
+  border-radius: var(--radius-m);
+}
+.theme-toggle:hover {
+  background: var(--surface-2);
+  color: var(--accent);
+}
+.theme-toggle svg {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
 body {
   margin: 0;
 }
@@ -242,7 +263,6 @@ td {
   border-radius: var(--radius-m);
   padding: 16px;
   margin: 16px 0;
-  width: 100%;
   text-align: left;
   color: var(--text);
 }
