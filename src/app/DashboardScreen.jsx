@@ -11,8 +11,22 @@ import { ReportsView } from '../features/reports/components/ReportsView.jsx'
 import { MonitorForm } from '../features/monitors/components/MonitorForm.jsx'
 
 export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, onToggleTheme }) {
-  const { summary, monitors, incidents, loading, loadError, stale, syncing, actionError, pendingId, updatedAt, reload, create, toggle, remove } =
-    useDashboard(monitorUC)
+  const {
+    summary,
+    monitors,
+    incidents,
+    loading,
+    loadError,
+    stale,
+    syncing,
+    actionError,
+    pendingId,
+    updatedAt,
+    reload,
+    create,
+    toggle,
+    remove,
+  } = useDashboard(monitorUC)
   const [tab, setTab] = useState('monitors')
   // Tick so "Updated Ns ago" stays honest between 15s polls.
   const [, setNow] = useState(0)
@@ -99,7 +113,13 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, on
             {tabs}
             <h3 className="attention-title">Attention</h3>
             <div className="tab-body">
-              <MonitorList monitors={monitors} pendingId={pendingId} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
+              <MonitorList
+                monitors={monitors}
+                pendingId={pendingId}
+                onSelect={onSelect}
+                onToggle={toggle}
+                onRemove={remove}
+              />
             </div>
             <aside aria-label="Open incidents">
               <IncidentList incidents={incidents.filter((i) => i.status === 'OPEN')} onSelect={onSelect} />
@@ -109,7 +129,13 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, on
           <>
             {tabs}
             {tab === 'monitors' && (
-              <MonitorList monitors={monitors} pendingId={pendingId} onSelect={onSelect} onToggle={toggle} onRemove={remove} />
+              <MonitorList
+                monitors={monitors}
+                pendingId={pendingId}
+                onSelect={onSelect}
+                onToggle={toggle}
+                onRemove={remove}
+              />
             )}
           </>
         )}

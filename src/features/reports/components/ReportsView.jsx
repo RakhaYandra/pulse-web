@@ -19,8 +19,17 @@ export function ReportsView({ monitorUC }) {
   if (error) {
     return (
       <div>
-        <p className="error" role="alert">{error}</p>
-        <button onClick={() => { setError(''); reload().catch((ex) => setError(ex.message)) }}>Retry</button>
+        <p className="error" role="alert">
+          {error}
+        </p>
+        <button
+          onClick={() => {
+            setError('')
+            reload().catch((ex) => setError(ex.message))
+          }}
+        >
+          Retry
+        </button>
       </div>
     )
   }

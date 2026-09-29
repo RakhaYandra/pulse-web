@@ -40,7 +40,9 @@ function Shell() {
     } catch {
       /* private mode: theme just won't persist */
     }
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'light' ? '#ffffff' : '#121212')
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', theme === 'light' ? '#ffffff' : '#121212')
   }, [theme])
 
   const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))

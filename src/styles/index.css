@@ -71,7 +71,9 @@ nav {
   color: var(--accent);
 }
 .theme-toggle svg {
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
 }
 body {
   margin: 0;

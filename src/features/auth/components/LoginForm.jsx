@@ -13,8 +13,7 @@ export function LoginForm({ onLogin, onRegister, error, busy }) {
     else onRegister(email, password, name)
   }
 
-  const submitLabel =
-    mode === 'login' ? (busy ? 'Logging in…' : 'Login') : busy ? 'Registering…' : 'Register'
+  const submitLabel = mode === 'login' ? (busy ? 'Logging in…' : 'Login') : busy ? 'Registering…' : 'Register'
 
   return (
     <div className="center">

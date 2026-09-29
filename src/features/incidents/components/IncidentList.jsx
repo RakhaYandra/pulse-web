@@ -6,7 +6,11 @@ export function IncidentList({ incidents, onSelect }) {
   return incidents.map((in_) => (
     <div key={in_.id} className="row">
       <div>
-        <button className="row-open" onClick={() => onSelect?.(in_.monitorId)} aria-label={`Open monitor ${in_.monitorName}`}>
+        <button
+          className="row-open"
+          onClick={() => onSelect?.(in_.monitorId)}
+          aria-label={`Open monitor ${in_.monitorName}`}
+        >
           <b>{in_.status}</b>: {in_.monitorName}
         </button>{' '}
         <span className="mono">{incidentDuration(in_.startedAt, in_.resolvedAt)}</span>

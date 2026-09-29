@@ -39,9 +39,7 @@ export function DetailStats({ uptime, avg, status, p50, p95 }) {
         <span>avg response</span>
       </div>
       <div className="stat">
-        <b className="mono">
-          {p50 == null ? 'n/a' : `${p50} / ${p95} ms`}
-        </b>
+        <b className="mono">{p50 == null ? 'n/a' : `${p50} / ${p95} ms`}</b>
         <span>p50 / p95</span>
       </div>
       <div className="stat">

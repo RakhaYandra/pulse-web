@@ -50,7 +50,10 @@ export function sortMonitors(monitors = []) {
 
 // Latency percentiles over checks with a measured time (null when none).
 export function latencyStats(checks = []) {
-  const timed = checks.filter((c) => c.responseTimeMs != null).map((c) => c.responseTimeMs).sort((a, b) => a - b)
+  const timed = checks
+    .filter((c) => c.responseTimeMs != null)
+    .map((c) => c.responseTimeMs)
+    .sort((a, b) => a - b)
   if (!timed.length) return null
   const at = (p) => timed[Math.min(timed.length - 1, Math.floor(p * timed.length))]
   return { p50: at(0.5), p95: at(0.95), count: timed.length }
