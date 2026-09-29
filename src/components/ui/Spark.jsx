@@ -7,21 +7,24 @@ import { sparkPoints } from '../../domain/stats.js'
 const W = 300
 const H = 120
 
-export function Spark({ checks }) {
-  const { points, path } = sparkPoints(checks, W, H)
+export function Spark({ checks, timeoutMs }) {
+  const { points, path, max } = sparkPoints(checks, W, H)
   const gid = useId()
   if (!points.length) return <div className="muted">no data yet</div>
   const last = points[points.length - 1]
   const area = `${path} L${last.x.toFixed(1)},${H} L0,${H} Z`
   const timed = checks.filter((c) => c.responseTimeMs != null).map((c) => c.responseTimeMs)
-  const max = Math.max(...timed)
+  const maxV = Math.max(...timed)
   const min = Math.min(...timed)
+  // Timeout line on the same scale, clamped into the chart.
+  const scaleMax = Math.max(max, timeoutMs ?? 0, 1)
+  const ty = timeoutMs == null ? null : Math.min(H - 2, Math.max(2, H - (timeoutMs / scaleMax) * (H - 6) - 3))
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
       className="spark spark-fluid"
       role="img"
-      aria-label={`Response time, min ${min} ms, max ${max} ms`}
+      aria-label={`Response time, min ${min} ms, max ${maxV} ms`}
     >
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
@@ -34,6 +37,14 @@ export function Spark({ checks }) {
       ))}
       <path d={area} fill={`url(#${gid})`} stroke="none" />
       <path d={path} fill="none" strokeWidth="2" />
+      {ty != null && (
+        <>
+          <line x1="0" x2={W} y1={ty} y2={ty} className="spark-threshold" strokeDasharray="4 3" />
+          <text x={W - 4} y={Math.min(H - 4, ty + 12)} textAnchor="end" className="spark-threshold-label">
+            timeout {(timeoutMs / 1000).toFixed(timeoutMs % 1000 === 0 ? 0 : 1)}s
+          </text>
+        </>
+      )}
       {points.map((p, i) =>
         p.up ? null : (
           <circle

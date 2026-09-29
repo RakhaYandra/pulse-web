@@ -9,11 +9,13 @@ export function useDashboard(monitorUC) {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
   const [stale, setStale] = useState('')
+  const [syncing, setSyncing] = useState(false)
   const [actionError, setActionError] = useState('')
   const [pendingId, setPendingId] = useState(null)
   const [updatedAt, setUpdatedAt] = useState(null)
 
   async function reload() {
+    setSyncing(true)
     try {
       const d = await monitorUC.loadDashboard()
       setSummary(d.summary)
@@ -25,6 +27,7 @@ export function useDashboard(monitorUC) {
     } catch (ex) {
       if (summary === null) setLoadError(ex.message || 'Failed to load dashboard.')
     } finally {
+      setSyncing(false)
       setLoading(false)
     }
   }
@@ -80,6 +83,7 @@ export function useDashboard(monitorUC) {
     loading,
     loadError,
     stale,
+    syncing,
     actionError,
     pendingId,
     updatedAt,

@@ -1,5 +1,5 @@
 import { useMonitorDetail } from '../hooks.js'
-import { uptimePct, avgResponseMs, checkDisplay, incidentDuration } from '../../../domain/stats.js'
+import { uptimePct, avgResponseMs, latencyStats, checkDisplay, incidentDuration } from '../../../domain/stats.js'
 import { formatDateTime, formatCheckTime } from '../../../utils/formatDate.js'
 import { Dot } from '../../../components/ui/Dot.jsx'
 import { Spark } from '../../../components/ui/Spark.jsx'
@@ -43,12 +43,14 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, on
 
   const uptime = uptimePct(checks)
   const avg = avgResponseMs(checks)
+  const lat = latencyStats(checks)
 
   return (
     <>
       <Topbar email={user.email} onLogout={onLogout} theme={theme} onToggleTheme={onToggleTheme} />
       <div className="wrap wrap-wide">
         <button
+          className="secondary"
           onClick={() => {
             onBack()
             onChanged?.()
@@ -65,11 +67,32 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, on
           </div>
         )}
         <div className="muted">
-          {m.url} · every {m.intervalSeconds}s · timeout {m.timeoutSeconds}s
+          {m.url}, every {m.intervalSeconds}s, timeout {m.timeoutSeconds}s
         </div>
-        <DetailStats uptime={uptime == null ? null : uptime.toFixed(2)} avg={avg} status={m.status} />
+        <DetailStats uptime={uptime == null ? null : uptime.toFixed(2)} avg={avg} p50={lat?.p50} p95={lat?.p95} status={m.status} />
         <h3>Response time, last 20 checks</h3>
-        <Spark checks={checks} />
+        <Spark checks={checks} timeoutMs={m.timeoutSeconds != null ? m.timeoutSeconds * 1000 : null} />
+        <details className="chart-data">
+          <summary>Chart data (table)</summary>
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Time</th>
+                  <th scope="col">Response</th>
+                </tr>
+              </thead>
+              <tbody>
+                {checks.filter((c) => c.responseTimeMs != null).map((c, i) => (
+                  <tr key={`${c.checkedAt}-${i}`}>
+                    <td>{formatCheckTime(c.checkedAt)}</td>
+                    <td className="mono">{c.responseTimeMs} ms</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
         <h3>Recent checks</h3>
         <div className="table-scroll">
           <table>
@@ -100,8 +123,9 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, on
         </div>
         <h3>Incidents</h3>
         {incidents.length === 0 && <div className="muted">none</div>}
+        <div className="timeline">
         {incidents.map((in_) => (
-          <div key={in_.id} className="card">
+          <div key={in_.id} className={in_.status === 'OPEN' ? 'card open-incident' : 'card'}>
             <b>{in_.status}</b>: {in_.reason} ·{' '}
             <span className="mono">{incidentDuration(in_.startedAt, in_.resolvedAt)}</span>
             <br />
@@ -111,6 +135,7 @@ export function MonitorDetailScreen({ monitorUC, id, onBack, onChanged, user, on
             </span>
           </div>
         ))}
+        </div>
       </div>
     </>
   )

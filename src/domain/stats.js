@@ -48,6 +48,14 @@ export function sortMonitors(monitors = []) {
     .map(([m]) => m)
 }
 
+// Latency percentiles over checks with a measured time (null when none).
+export function latencyStats(checks = []) {
+  const timed = checks.filter((c) => c.responseTimeMs != null).map((c) => c.responseTimeMs).sort((a, b) => a - b)
+  if (!timed.length) return null
+  const at = (p) => timed[Math.min(timed.length - 1, Math.floor(p * timed.length))]
+  return { p50: at(0.5), p95: at(0.95), count: timed.length }
+}
+
 // Human duration between two ISO timestamps: "45s", "12m", "3h 5m", "2d 1h".
 export function incidentDuration(startedAt, resolvedAt, nowMs = Date.now()) {
   const end = resolvedAt ? new Date(resolvedAt).getTime() : nowMs

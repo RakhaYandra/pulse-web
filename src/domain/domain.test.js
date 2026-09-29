@@ -93,3 +93,19 @@ describe('formatDurationSecs', () => {
     expect(formatDurationSecs(11100)).toBe('3h 5m')
   })
 })
+
+describe('latencyStats', () => {
+  it('returns null without timed checks', async () => {
+    const { latencyStats } = await import('./stats.js')
+    expect(latencyStats([])).toBeNull()
+    expect(latencyStats([{ status: 'DOWN', responseTimeMs: null }])).toBeNull()
+  })
+  it('computes p50/p95 over timed checks', async () => {
+    const { latencyStats } = await import('./stats.js')
+    const checks = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map((ms) => ({
+      status: 'UP',
+      responseTimeMs: ms,
+    }))
+    expect(latencyStats(checks)).toEqual({ p50: 60, p95: 100, count: 10 })
+  })
+})

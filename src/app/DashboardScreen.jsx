@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useDashboard } from '../features/monitors/hooks.js'
-import { countOpen } from '../domain/stats.js'
+import { countOpen, incidentDuration } from '../domain/stats.js'
 import { ago } from '../utils/formatDate.js'
 import { SummaryStats } from '../components/ui/Stats.jsx'
 import { Topbar } from '../components/ui/Topbar.jsx'
+import { PulseMark } from '../components/ui/PulseMark.jsx'
 import { MonitorList } from '../features/monitors/components/MonitorList.jsx'
 import { IncidentList } from '../features/incidents/components/IncidentList.jsx'
 import { ReportsView } from '../features/reports/components/ReportsView.jsx'
 import { MonitorForm } from '../features/monitors/components/MonitorForm.jsx'
 
 export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, onToggleTheme }) {
-  const { summary, monitors, incidents, loading, loadError, stale, actionError, pendingId, updatedAt, reload, create, toggle, remove } =
+  const { summary, monitors, incidents, loading, loadError, stale, syncing, actionError, pendingId, updatedAt, reload, create, toggle, remove } =
     useDashboard(monitorUC)
   const [tab, setTab] = useState('monitors')
   // Tick so "Updated Ns ago" stays honest between 15s polls.
@@ -70,14 +71,28 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, on
           </div>
         )}
         {open > 0 && (
-          <section aria-label="Attention" className="banner">
-            <strong>
-              {open} open incident{open === 1 ? '' : 's'}
-            </strong>
-            . Attention needed.{' '}
-            <button className="link" onClick={() => setTab('incidents')}>
-              View incidents
-            </button>
+          <section aria-label="Attention" className="banner attention-focal">
+            <span className="brand-mark" aria-hidden="true">
+              <PulseMark />
+            </span>
+            <div>
+              <strong>
+                {open} open incident{open === 1 ? '' : 's'}
+              </strong>
+              {(() => {
+                const first = incidents.find((i) => i.status === 'OPEN')
+                if (!first) return null
+                return (
+                  <span>
+                    {' '}
+                    — {first.monitorName} down for {incidentDuration(first.startedAt, first.resolvedAt)}.{' '}
+                    <button className="link" onClick={() => onSelect(first.monitorId)}>
+                      Open monitor
+                    </button>
+                  </span>
+                )
+              })()}
+            </div>
           </section>
         )}
         {tab === 'monitors' && open > 0 ? (
@@ -103,7 +118,13 @@ export function DashboardScreen({ user, monitorUC, onLogout, onSelect, theme, on
         {tab === 'reports' && <ReportsView monitorUC={monitorUC} />}
         {tab === 'new' && <MonitorForm onCreate={create} />}
         <p className="muted freshness">
-          Updated {ago(updatedAt)} ·{' '}
+          {syncing ? (
+            <span className="syncing">
+              <span className="sync-dot" aria-hidden="true" /> Checking…
+            </span>
+          ) : (
+            <>Updated {ago(updatedAt)} · </>
+          )}
           <button className="link" onClick={reload}>
             Refresh now
           </button>

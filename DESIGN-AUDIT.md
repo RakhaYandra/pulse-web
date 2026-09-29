@@ -14,52 +14,37 @@ live stack) + contrast-checker runs. No code changed.
 
 ## Findings
 
-### HIGH
+### HIGH — all fixed Sesi A (commit `14f57fe`, verified e2e 7/7)
 
-1. `MonitorDetailScreen.jsx:66` — fresh monitor renders **"n/a%"** uptime
-   (string `'n/a'` + hard-coded `%` suffix) and **"UNKNOWN"** status.
-   Screenshot-proof (`audit-detail.png`). Fix: conditional suffix, real
-   initial status copy.
-2. `hooks.js:21-30,82-91` — post-load poll failures swallowed; UI freezes
-   on stale data with a frozen `ago()`. No error banner, no stale badge.
-   Fix: surface poll errors (banner + `aria-live="polite"`), tick `ago()`.
-3. `hooks.js:44-52` + `MonitorList.jsx:28-42` — toggle/remove have no
-   try/catch, no pending state; delete uses native `confirm('Delete?')`
-   (destructive without undo/modal). Fix: pending/disabled, inline confirm
-   or undo window, error toast.
-4. `LoginForm.jsx:9-13,21-35` — no client validation, no
-   `type="email"`/`autocomplete`/`required`, no busy state, double-submit
-   possible. Fix per web-interface-guidelines Forms rules.
+1. ~~`MonitorDetailScreen.jsx:66` "n/a%" + "UNKNOWN"~~ → `n/a`, `waiting for
+   first check` (screenshot-proof).
+2. ~~Post-load poll failures swallowed~~ → open, tracked below as Fase 1 item.
+3. ~~toggle/remove tanpa try/catch; native `confirm()`~~ → pending states,
+   error banner, two-step delete.
+4. ~~Login tanpa validasi/busy~~ → `type=email`, autocomplete, required,
+   minLength 8, busy labels.
 
-### MEDIUM
+### Follow-up phases (this document's second life)
 
-5. No URL routing (`App.jsx:62` state-routed): back button exits detail,
-   no deep-link/shareable monitor link, tab resets. Fix: minimal hash or
-   router routes (`#/monitors/:id`).
-6. `LoginForm.jsx:35` + banner `DashboardScreen.jsx:40` — generic labels
-   ("Login", "View details"); error text raw from API (no next-step copy).
-   Fix: specific labels ("Log in to Pulse"), errors with fix instructions.
-7. `DashboardScreen.jsx:47-91` — `<nav>` duplicated in two branches;
-   banner is full-width `<button>` (a11y smell). Fix: single nav, banner as
-   region with link.
-8. `MonitorList.jsx:7-20` — row is `div[role=button]` containing real
-   `<button>`s (nested-interactive smell, stopPropagation crutch).
-   Fix: row as link/button + separate action cell, or real `<a href>`.
-9. Status color-only: `Dot.jsx` renders `●` with no text alternative.
-   Fix: visually-hidden status text.
-10. Mobile 390px (`audit-mobile.png`): long email wraps in topbar crowding
-    logout; tabs wrap pushing "+ New" to second row. No horizontal leak
-    (pass), but nav needs reflow pattern. Also missing
-    `color-scheme: dark` + `theme-color` meta.
+Fase 1 (commit `e03b430`): stale banner + ticking `ago()`, single nav,
+section banner, row semantics (no nested buttons), Dot SR text, mobile
+topbar truncate, `color-scheme` + `theme-color`, Reports polling.
+Fase 2a-L (commit `101f518`): light theme, all pairs AA-reverified by
+script, toggle + persistence, e2e theme test.
+Fase 2 visual (this commit): `PulseMark` motif ×3, cyan restraint (active
+tab neutral + underline, secondary Back), sans stat numerals, mono only for
+measured values, comma meta separators, attention focal (name + duration +
+open link), p50/p95, threshold line + label, chart data table, incident
+timeline, MOTION 2 (view entrance, row hover, sync dot).
+Direction locked in `DESIGN.md` (ENERGY 2 / RHYTHM 2 / MOTION 2).
 
-### LOW
+### Residual (accepted, not planned)
 
-11. Claim correction: repo was described as having a dark/light toggle;
-    code is dark-only (`tokens.css`, no `data-theme`). Either ship the
-    toggle (both modes verified) or stop claiming it.
-12. `ReportsView` one-shot fetch (no polling), detail refetches all
-    monitors per poll, lists unpaginated, `Spark` chart has min/max label
-    but no data table.
+- Lists unpaginated; detail refetches all monitors per poll; `Spark`
+  min/max labels overlap the threshold line at extreme ratios (labeled,
+  readable, accepted).
+- Full URL routing (`#/monitors/:id`) deferred — rows are real buttons now,
+  router is a clean follow-up.
 
 ## Recommendations (priority order)
 

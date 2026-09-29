@@ -1,10 +1,19 @@
 import { useState } from 'react'
 import { Dot } from '../../../components/ui/Dot.jsx'
+import { PulseMark } from '../../../components/ui/PulseMark.jsx'
 import { sortMonitors } from '../../../domain/stats.js'
 
 export function MonitorList({ monitors, pendingId, onSelect, onToggle, onRemove }) {
   const [confirmId, setConfirmId] = useState(null)
-  if (!monitors.length) return <div className="muted">No monitors yet. Open + New to create one.</div>
+  if (!monitors.length)
+    return (
+      <div className="muted empty-state">
+        <span className="brand-mark">
+          <PulseMark size={28} />
+        </span>
+        <p>No monitors yet. Open + New to create one.</p>
+      </div>
+    )
   return sortMonitors(monitors).map((m) => {
     return (
     <div
@@ -17,7 +26,7 @@ export function MonitorList({ monitors, pendingId, onSelect, onToggle, onRemove 
         </button>
         <br />
         <span className="muted">
-          {m.url} · every {m.intervalSeconds}s{m.isActive ? '' : ' · PAUSED'}
+          {m.url}, every {m.intervalSeconds}s{m.isActive ? '' : ', PAUSED'}
         </span>
       </div>
       <div>
