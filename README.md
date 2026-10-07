@@ -2,12 +2,17 @@
 
 > Ecosystem: [api](https://github.com/RakhaYandra/pulse) · [web](https://github.com/RakhaYandra/pulse-web) · [docs](https://github.com/RakhaYandra/pulse-docs/releases) · [data](https://github.com/RakhaYandra/pulse-data) · [qa](https://github.com/RakhaYandra/pulse-qa) · [ops](https://github.com/RakhaYandra/pulse-ops)
 
-React dashboard for the Pulse monitoring API: overview stats, monitor
-list/detail with SVG response-time chart, recent checks, incident history
-(click through to the monitor), per-monitor reliability reports (uptime,
-MTTR, 30-day window), monitor CRUD + pause/resume. No router —
-state-driven views; data refreshes every 15s. Full Clean Architecture
-(see below).
+React dashboard for the Pulse monitoring API: sidebar command deck with
+overview stats, fleet table (state badges, method + target, 24h uptime, last
+checked, filter chips, search, CSV export), monitor detail with SVG
+response-time chart, breach callout, recent checks, incident history
+(click through to the monitor), per-monitor reliability reports with fleet
+aggregates (uptime, MTTR, 7/30/90-day window), monitor create/edit in a
+slide-over drawer + pause/resume/delete. React-router deep links
+(`/monitors/:id`, `?tab/?page/?days`); data refreshes every 15s (24h uptime
+once per mount + after mutations). Full Clean Architecture (see below).
+Visual direction: `DESIGN.md` (Telemetry Command Deck, dark-first + verified
+light, both AA).
 
 ![Dashboard](https://raw.githubusercontent.com/RakhaYandra/pulse-docs/main/dashboard.png)
 
@@ -40,10 +45,10 @@ then serves it via nginx.
 ## Test
 
 ```bash
-npx vitest run          # 26 unit tests (domain + use-cases + hooks, fake gateways)
+npx vitest run          # 27 unit tests (domain + use-cases + hooks, fake gateways)
 ```
 
-E2E lives in [`pulse-qa`](https://github.com/RakhaYandra/pulse-qa) (8 Playwright
+E2E lives in [`pulse-qa`](https://github.com/RakhaYandra/pulse-qa) (10 Playwright
 tests, black-box, needs API + web up):
 
 ```bash
@@ -78,7 +83,8 @@ features/{auth,monitors,incidents,reports}/
                  per-feature api (endpoint + JSON→domain mapping),
                  use-cases (constructor-injected, fake-tested),
                  hooks + components colocated
-components/ui/   shared presentational primitives (Dot, Spark, Stats)
+components/ui/   shared presentational primitives (Dot, Spark, Stats,
+                  Sidebar, Drawer)
 hooks/           shared usePolling primitive
 lib/             httpClient (transport), tokenStore (localStorage adapter)
 utils/           display formatters (formatDate)
@@ -94,8 +100,9 @@ Incidents/reports consume the shared monitoring gateway — one wire contract,
 no mapper duplication (documented deviation from one-api-per-feature).
 
 Styling: global CSS (`styles/index.css`) + design tokens (`styles/tokens.css`),
-no CSS Modules — deliberate at this size (one 60-line stylesheet, no class
-collisions); revisit if component count doubles.
+no CSS Modules — deliberate at this size (single stylesheet, no class
+collisions); revisit if component count doubles. Create/edit share one
+`MonitorForm` rendered in the drawer (create) or edit mode (`PATCH`).
 
 Auth: JWT from login/register, stored via `TokenStore`, sent as
 `Authorization: Bearer`; 401 on restore clears the session back to login.
