@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { usePolling } from '../../hooks/usePolling.js'
 
 export function useDashboard(monitorUC) {
@@ -13,6 +13,9 @@ export function useDashboard(monitorUC) {
   const [actionError, setActionError] = useState('')
   const [pendingId, setPendingId] = useState(null)
   const [updatedAt, setUpdatedAt] = useState(null)
+  const [uptimeMap, setUptimeMap] = useState({})
+  // 24h uptime barely moves: fetch once per mount + after mutations, never on poll.
+  const uptimeStale = useRef(true)
 
   async function reload() {
     setSyncing(true)
@@ -30,6 +33,16 @@ export function useDashboard(monitorUC) {
       setSyncing(false)
       setLoading(false)
     }
+    if (uptimeStale.current) {
+      uptimeStale.current = false
+      try {
+        const rows = await monitorUC.loadReliability(1)
+        setUptimeMap(Object.fromEntries(rows.map((r) => [r.monitorId, r.uptimePct])))
+      } catch {
+        /* uptime column stays blank; dashboard still works */
+        uptimeStale.current = true
+      }
+    }
   }
 
   usePolling(reload, 15000, [], (ex) => {
@@ -37,16 +50,25 @@ export function useDashboard(monitorUC) {
     else setStale(ex.message || 'Update failed.')
   })
 
-  async function create(raw) {
+  async function mutate(fn) {
     setError('')
+    uptimeStale.current = true
     try {
-      await monitorUC.createMonitor(raw)
+      await fn()
       await reload()
       return null
     } catch (ex) {
       setError(ex.message)
       return ex.message
     }
+  }
+
+  async function create(raw) {
+    return mutate(() => monitorUC.createMonitor(raw))
+  }
+
+  async function update(id, raw) {
+    return mutate(() => monitorUC.updateMonitor(id, raw))
   }
 
   async function toggle(monitor) {
@@ -87,8 +109,10 @@ export function useDashboard(monitorUC) {
     actionError,
     pendingId,
     updatedAt,
+    uptimeMap,
     reload,
     create,
+    update,
     toggle,
     remove,
   }
@@ -100,6 +124,8 @@ export function useMonitorDetail(monitorUC, id) {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
   const [stale, setStale] = useState('')
+  const [actionError, setActionError] = useState('')
+  const [pending, setPending] = useState(false)
 
   async function reload() {
     try {
@@ -121,5 +147,19 @@ export function useMonitorDetail(monitorUC, id) {
     else setStale(ex.message || 'Update failed.')
   })
 
-  return { monitor, checks, incidents, loading, loadError, stale, reload }
+  return { monitor, checks, incidents, loading, loadError, stale, actionError, pending, reload, toggle }
+
+  async function toggle() {
+    if (!monitor) return
+    setActionError('')
+    setPending(true)
+    try {
+      await monitorUC.togglePause(monitor)
+      await reload()
+    } catch (ex) {
+      setActionError(ex.message || 'Failed to update monitor.')
+    } finally {
+      setPending(false)
+    }
+  }
 }

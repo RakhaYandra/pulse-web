@@ -28,15 +28,15 @@ export function Spark({ checks, timeoutMs }) {
     >
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.45" />
-          <stop offset="100%" stopColor="#00e5ff" stopOpacity="0.02" />
+          <stop offset="0%" style={{ stopColor: 'var(--accent)', stopOpacity: 0.25 }} />
+          <stop offset="100%" style={{ stopColor: 'var(--accent)', stopOpacity: 0.02 }} />
         </linearGradient>
       </defs>
       {[0.25, 0.5, 0.75].map((f) => (
         <line key={f} x1="0" x2={W} y1={H * f} y2={H * f} className="spark-grid" />
       ))}
       <path d={area} fill={`url(#${gid})`} stroke="none" />
-      <path d={path} fill="none" strokeWidth="2" />
+      <path d={path} fill="none" strokeWidth="1.5" />
       {ty != null && (
         <>
           <line x1="0" x2={W} y1={ty} y2={ty} className="spark-threshold" strokeDasharray="4 3" />

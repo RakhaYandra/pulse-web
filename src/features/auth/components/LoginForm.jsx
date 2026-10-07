@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { PulseMark } from '../../../components/ui/PulseMark.jsx'
 
 export function LoginForm({ onLogin, onRegister, error, busy }) {
   const [mode, setMode] = useState('login')
@@ -13,23 +14,47 @@ export function LoginForm({ onLogin, onRegister, error, busy }) {
     else onRegister(email, password, name)
   }
 
-  const submitLabel = mode === 'login' ? (busy ? 'Logging in…' : 'Login') : busy ? 'Registering…' : 'Register'
+  const submitLabel = busy ? 'Authenticating…' : 'Enter ops deck'
 
   return (
     <div className="center">
-      <form className="card" onSubmit={submit}>
-        <h1>Pulse</h1>
-        <p className="muted">API monitoring & incidents</p>
+      <form className="card auth-card" onSubmit={submit}>
+        <h1 className="brand">
+          <span className="brand-mark">
+            <PulseMark />
+          </span>
+          Pulse
+        </h1>
+        <p className="muted">API monitoring and incidents console</p>
         {error && (
           <div className="error" role="alert">
             {error}
           </div>
         )}
+        <div className="seg" role="group" aria-label="Auth mode">
+          <button
+            type="button"
+            className={mode === 'login' ? 'active' : ''}
+            aria-pressed={mode === 'login'}
+            onClick={() => setMode('login')}
+          >
+            Sign in
+          </button>
+          <button
+            type="button"
+            className={mode === 'register' ? 'active' : ''}
+            aria-pressed={mode === 'register'}
+            onClick={() => setMode('register')}
+          >
+            Register
+          </button>
+        </div>
         <label>
-          Email
+          <span className="label-caps">SRE identity / work email</span>
           <input
             type="email"
             name="email"
+            aria-label="Email"
             autoComplete="email"
             spellCheck={false}
             required
@@ -39,10 +64,11 @@ export function LoginForm({ onLogin, onRegister, error, busy }) {
           />
         </label>
         <label>
-          Password (min 8)
+          <span className="label-caps">Master cipher / passkey</span>
           <input
             type="password"
             name={mode === 'login' ? 'current-password' : 'new-password'}
+            aria-label="Password"
             autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
             required
             minLength={8}
@@ -52,9 +78,10 @@ export function LoginForm({ onLogin, onRegister, error, busy }) {
         </label>
         {mode === 'register' && (
           <label>
-            Display name
+            <span className="label-caps">Callsign / display name</span>
             <input
               name="name"
+              aria-label="Display name"
               autoComplete="name"
               required
               placeholder="Your name"
@@ -63,15 +90,8 @@ export function LoginForm({ onLogin, onRegister, error, busy }) {
             />
           </label>
         )}
-        <button type="submit" disabled={busy}>
+        <button className="btn-block" type="submit" disabled={busy}>
           {submitLabel}
-        </button>
-        <button
-          type="button"
-          className="link"
-          onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-        >
-          {mode === 'login' ? 'Need an account? Register' : 'Have an account? Login'}
         </button>
       </form>
     </div>

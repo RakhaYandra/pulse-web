@@ -12,9 +12,12 @@ export function formatCheckTime(iso) {
 }
 
 export function ago(ts) {
-  if (!ts) return ''
-  const s = Math.max(0, Math.round((Date.now() - ts) / 1000))
+  if (!ts) return 'never'
+  const t = typeof ts === 'string' ? Date.parse(ts) : ts
+  if (!Number.isFinite(t)) return 'never'
+  const s = Math.max(0, Math.round((Date.now() - t) / 1000))
   if (s < 5) return 'just now'
   if (s < 60) return `${s}s ago`
-  return `${Math.floor(s / 60)}m ago`
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`
+  return `${Math.floor(s / 3600)}h ago`
 }

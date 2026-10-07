@@ -10,6 +10,7 @@ export function createMonitorUseCases({ monitorGateway }) {
         ([summary, monitors, incidents]) => ({ summary, monitors, incidents }),
       ),
     createMonitor: (raw) => monitorGateway.createMonitor(normalizeMonitorInput(raw)),
+    updateMonitor: (id, raw) => monitorGateway.editMonitor(id, normalizeMonitorInput(raw)),
     togglePause: (monitor) => monitorGateway.setActive(monitor.id, !monitor.isActive),
     removeMonitor: (id) => monitorGateway.removeMonitor(id),
     loadMonitorDetail: (id) =>
